@@ -1,0 +1,334 @@
+---
+title: Setting up PyCharm Community Edition with PyLint on Windows
+slug: setting-up-pycharm-community-edition-with-pylint-on-windows
+date_published: 2013-11-19T02:41:13.000Z
+date_updated:   2015-07-24T13:24:04.544Z
+tags: PyCharm, PyLint, Python
+---
+
+I use <a title="Anaconda Python" href="https://store.continuum.io/cshop/anaconda/" target="_blank">Anaconda</a>&nbsp;for Python, it comes prepackaged with some great tools like Numpy and Scipy. Developing python can easily become a hellish nightmare without proper structure and documentation. So soon after starting Python development, I had to start using PyLint, a great tool to help structure my code.&nbsp;
+
+Eventually I started developing using Eclipse paired with PyDev, it is an amazing experience compared to not using Eclipse. And if I hadn't discovered PyCharm this weekend I would probably still use it. The problem with Eclipse is that it is very power-hungry, and even though PyCharm it is not light per se, it is still very multi taskable on a laptop compared to Eclipse, as long as you have enough RAM.
+
+So I fired up PyCharm, and I found it doesn't have PyLint for default. Then I found [this guide first](http://www.in-nomine.org/2010/12/14/pycharm-and-external-lint-tools/) and [this guide second](http://blog.saturnlaboratories.co.za/archive/2012/09/10/running-pylint-pycharm). Both guide were good but not up to expectations.
+
+The first thing I did was create a batch file "lint.bat" that would run PyLint like the following:
+
+```language-bash
+lint.bat someFile.py
+```
+
+```language-bash
+@echo off
+rem Use pylint on the file passed as parameter %1
+rem Using the conf file in the specified path
+C:\Path\to\pylint.exe --rcfile=C:\Path\to\pylintconf\pylint.conf %1
+```
+  
+Why a configuration file you ask?
+
+Well I work mostly on windows, so I hate certain errors and warnings that are not relevant to my PyLint (like a whitespace or newline warnings). So I disable certain types of warnings and all the metrics. I am only interested in unused variables, missing docstrings, dangerous uses of python, etc.
+
+So now we configure our lint batch file on PyCharm.
+
+First enter the PyCharm Settings panel [![Settings](https://dl.dropboxusercontent.com/u/15672028/Image%20038.png)](https://dl.dropboxusercontent.com/u/15672028/Image%20038.png)
+
+&nbsp;Afterwards you go to External Tools and a New Tool
+
+[![Adding new tool](https://dl.dropboxusercontent.com/u/15672028/Image%20039.png)](https://dl.dropboxusercontent.com/u/15672028/Image%20039.png)
+
+In this part you will configure the batch file to run using your current file.&nbsp;
+
+Like this:
+
+[![Adding Pylint](https://dl.dropboxusercontent.com/u/15672028/Image%20040.png)](https://dl.dropboxusercontent.com/u/15672028/Image%20040.png)
+
+And that's it, happiness ensues
+<h2>APPENDIX</h2>
+So what's in the Configuration File? Just the Following:
+
+```language-bash
+# This is a configuration file for pylint.
+
+# (C) 2011-2013 by the GRASS Development Team
+
+# This program is free software under the GNU General Public License
+# (>=v2). Read the file COPYING that comes with GRASS for details.
+
+# author: Vaclav Petras <wenzeslaus gmail.com>
+
+# This configuration should work for all Python library, Python scripts and
+# wxPython GUI.
+# Example for gui/wxpython:
+# pylint --rcfile=../../tools/pylintrc.txt -f parseable -r n -i y lmgr/
+
+# A lot of errors need to be ignored now to avoid a large number of messages.
+# Files need to be fixed one by one (partialy without this configuration).
+
+
+[MASTER]
+
+# Specify a configuration file.
+#rcfile=
+
+# Python code to execute, usually for sys.path manipulation such as
+# pygtk.require().
+#init-hook=
+
+# Profiled execution.
+profile=no
+
+# Add files or directories to the blacklist. They should be base names, not
+# paths.
+ignore=CVS
+
+# Pickle collected data for later comparisons.
+persistent=no
+
+# List of plugins (as comma separated values of python modules names) to load,
+# usually to register additional checkers.
+load-plugins=
+
+
+[MESSAGES CONTROL]
+
+# Enable the message, report, category or checker with the given id(s). You can
+# either give multiple identifier separated by comma (,) or put this option
+# multiple time.
+#enable=
+
+# E1103: caused probably by wxPython
+# W0613: unused arg -> solve somewhere here using event
+# C0103: names not defined
+# W0201: define methods used for init
+# W0622: Redefining built-in %r: needs complex solution
+
+# E1101: %s %r has no %r member: why?
+# R0201: can be solved
+# F0401: somthing is possible to import only in grass
+# Disable the message, report, category or checker with the given id(s). You
+# can either give multiple identifier separated by comma (,) or put this option
+# multiple time (only on the command line, not in the configuration file where
+# it should appear only once).
+disable=E1103, R0201, R0904, W0403, C0303, C0304
+
+[REPORTS]
+
+# Set the output format. Available formats are text, parseable, colorized, msvs
+# (visual studio) and html
+output-format=text
+
+# Include message's id in output
+include-ids=yes
+
+# Put messages in a separate file for each module / package specified on the
+# command line instead of printing them on stdout. Reports (if any) will be
+# written in a file name "pylint_global.[txt|html]".
+files-output=no
+
+# Tells whether to display a full report or only the messages
+reports=no
+
+# Python expression which should return a note less than 10 (10 is the highest
+# note). You have access to the variables errors warning, statement which
+# respectively contain the number of errors / warnings messages and the total
+# number of statements analyzed. This is used by the global evaluation report
+# (RP0004).
+evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)
+
+# Add a comment according to your evaluation note. This is used by the global
+# evaluation report (RP0004).
+comment=no
+
+
+[VARIABLES]
+
+# Tells whether we should check for unused import in __init__ files.
+init-import=yes
+
+# A regular expression matching the beginning of the name of dummy variables
+# (i.e. not used).
+dummy-variables-rgx=dummy|unused
+
+# List of additional names supposed to be defined in builtins. Remember that
+# you should avoid to define new builtins when possible.
+additional-builtins=_
+
+
+[BASIC]
+
+# Required attributes for module, separated by a comma
+required-attributes=
+
+# List of builtins function names that should not be used, separated by a comma
+bad-functions=map,filter,apply,input
+
+# Regular expression which should only match correct module names
+module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
+
+# Regular expression which should only match correct module level names
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+# Regular expression which should only match correct class names
+class-rgx=[A-Z_][a-zA-Z0-9]+$
+
+# Regular expression which should only match correct function names
+function-rgx=[a-z_][a-zA-Z0-9_]{2,30}$
+
+# Regular expression which should only match correct method names
+method-rgx=[a-zA-Z_][a-zA-Z0-9_]{2,30}$
+
+# Regular expression which should only match correct instance attribute names
+attr-rgx=[a-z_][a-zA-Z0-9_]{2,30}$
+
+# Regular expression which should only match correct argument names
+argument-rgx=[a-z_][a-zA-Z0-9_]{2,30}$
+
+# Regular expression which should only match correct variable names
+variable-rgx=[a-z_][a-zA-Z0-9_]{2,30}$|[a-z]
+
+# Regular expression which should only match correct list comprehension /
+# generator expression variable names
+inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
+
+# Good variable names which should always be accepted, separated by a comma
+good-names=i,j,_,x,y,z,N,E,S,W,id
+
+# Bad variable names which should always be refused, separated by a comma
+bad-names=foo,bar,baz,toto,tutu,tata
+
+# Regular expression which should only match functions or classes name which do
+# not require a docstring
+no-docstring-rgx=__.*__
+
+
+[MISCELLANEOUS]
+
+# List of note tags to take in consideration, separated by a comma.
+notes=FIXME,TODO,\\todo,@todo
+
+# general regexp for convention, warning etc. would be great
+
+[TYPECHECK]
+
+# Tells whether missing members accessed in mixin class should be ignored. A
+# mixin class is detected if its name ends with "mixin" (case insensitive).
+ignore-mixin-members=yes
+
+# List of classes names for which member attributes should not be checked
+# (useful for classes with attributes dynamically set).
+ignored-classes=SQLObject
+
+# When zope mode is activated, add a predefined set of Zope acquired attributes
+# to generated-members.
+zope=no
+
+# List of members which are set dynamically and missed by pylint inference
+# system, and so shouldn't trigger E0201 when accessed. Python regular
+# expressions are accepted.
+generated-members=REQUEST,acl_users,aq_parent
+
+
+[FORMAT]
+
+# Maximum number of characters on a single line.
+# Increased form 80.
+max-line-length=150
+
+# Maximum number of lines in a module
+# Increased from 1000.
+max-module-lines=2000
+
+# String used as indentation unit. This is usually " " (4 spaces) or "\t" (1
+# tab).
+indent-string='    '
+
+
+[SIMILARITIES]
+
+# Minimum lines number of a similarity.
+min-similarity-lines=4
+
+# Ignore comments when computing similarities.
+ignore-comments=yes
+
+# Ignore docstrings when computing similarities.
+ignore-docstrings=yes
+
+
+[DESIGN]
+
+# Maximum number of arguments for function / method
+# Increased from 5.
+max-args=10
+
+# Argument names that match this expression will be ignored. Default to name
+# with leading underscore
+ignored-argument-names=_.*|event
+
+# Maximum number of locals for function / method body
+# Changed from 15.
+max-locals=20
+
+# Maximum number of return / yield for function / method body
+max-returns=6
+
+# Maximum number of branch for function / method body
+# Changed from 12.
+max-branchs=20
+
+# Maximum number of statements in function / method body
+max-statements=50
+
+# Maximum number of parents for a class (see R0901).
+max-parents=7
+
+# Maximum number of attributes for a class (see R0902).
+# Changed from 7.
+max-attributes=10
+
+# Minimum number of public methods for a class (see R0903).
+min-public-methods=2
+
+# Maximum number of public methods for a class (see R0904).
+# Increased from 20
+max-public-methods=30
+
+
+[IMPORTS]
+
+# Deprecated modules which should not be used, separated by a comma
+deprecated-modules=regsub,string,TERMIOS,Bastion,rexec
+
+# Create a graph of every (i.e. internal and external) dependencies in the
+# given file (report RP0402 must not be disabled)
+import-graph=
+
+# Create a graph of external dependencies in the given file (report RP0402 must
+# not be disabled)
+ext-import-graph=
+
+# Create a graph of internal dependencies in the given file (report RP0402 must
+# not be disabled)
+int-import-graph=
+
+
+[CLASSES]
+
+# List of interface methods to ignore, separated by a comma. This is used for
+# instance to not check methods defines in Zope's Interface base class.
+ignore-iface-methods=isImplementedBy,deferred,extends,names,namesAndDescriptions,queryDescriptionFor,getBases,getDescriptionFor,getDoc,getName,getTaggedValue,getTaggedValueTags,isEqualOrExtendedBy,setTaggedValue,isImplementedByInstancesOf,adaptWith,is_implemented_by
+
+# List of method names used to declare (i.e. assign) instance attributes.
+defining-attr-methods=__init__,__new__,setUp
+
+# List of valid names for the first argument in a class method.
+valid-classmethod-first-arg=cls
+
+
+[EXCEPTIONS]
+
+# Exceptions that will emit a warning when being caught. Defaults to
+# "Exception"
+overgeneral-exceptions=Exception
+```

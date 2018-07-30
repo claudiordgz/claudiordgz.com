@@ -1,1 +1,1 @@
-# Content monorepo for claudiordgz
+# Content for claudiordgz

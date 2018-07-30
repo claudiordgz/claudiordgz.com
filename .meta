@@ -1,9 +1,0 @@
-{
-  "projects": {
-    "study": "git@github.com:claudiordgz-website/study.git",
-    "projects": "git@github.com:claudiordgz-website/projects.git",
-    "feeds": "git@github.com:claudiordgz-website/feeds.git",
-    "blog": "git@github.com:claudiordgz-website/blog.git",
-    "contentManager": "git@github.com:claudiordgz-website/contentManager.git"
-  }
-}
