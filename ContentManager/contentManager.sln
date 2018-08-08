@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "contentManager", "contentManager\contentManager.csproj", "{90942483-7056-43FB-AE96-09A13292AFCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentManager", "contentManager\ContentManager.csproj", "{90942483-7056-43FB-AE96-09A13292AFCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "contentManagerTest", "contentManagerTest\contentManagerTest.csproj", "{A69CB793-E2AA-43E5-85E2-80589A59548B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentManagerTest", "contentManagerTest\ContentManagerTest.csproj", "{A69CB793-E2AA-43E5-85E2-80589A59548B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

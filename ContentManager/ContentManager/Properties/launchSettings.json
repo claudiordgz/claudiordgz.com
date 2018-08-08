@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "ContentManager": {
+      "commandName": "Project",
+      "commandLineArgs": "--i ALL --t INCREMENTAL",
+      "environmentVariables": {
+        "CODEBUILD_SRC_DIR": "D:\\workspace\\claudiordgz-website\\content"
+      }
+    }
+  }
+}

@@ -1,46 +1,56 @@
 ﻿using System;
+using System.IO;
 using LibGit2Sharp;
 using CommandLine;
-// Content is created in markdown in it's own folder
-// Push to repo triggerS:
-// if environment variable 'INPUT' is ALL
-//      process all directories
-// else
-//      process only specific directories
-// if environment variable 'TYPE' is ORIGIN
-//      process all content
-// else
-//      process differences between HEAD and last tag
-// Each change (POST OR FEED), push to sqs
-// new changes will need to get deployed
-// blog
-//  each POST creates new item
-// feeds
-//  1 xml file
-//  file contains FEEDS
-//  each FEED creates new item
-//  each FEED triggers service that 
-// study
-//  each directory is STUDY and creates new item
-//  each POST in STUDY creates new item
-// projects
-//  each directory is PROJECT and creates new item
-//  each POST in PROJECT creates new item
+using System.Collections.Generic;
+
 namespace ContentManager
 {
 
     class Program
     {
+        enum InputType
+        {
+            ALL,
+            BLOG,
+            FEEDS,
+            PROJECTS,
+            STUDY
+        } 
+
+        enum BuildType
+        {
+            ORIGIN,
+            INCREMENTAL
+        }
+
         static void Main(string[] args)
         {
-            Parser.Default
-                .ParseArguments<Options>(args)
-                .WithParsed<Options>(opts =>
+            var result = Parser.Default.ParseArguments<Options>(args)
+                .MapResult(opts => {
+                    var cfg = new Dictionary<string, object>();
+                    Enum.TryParse(opts.Input, out InputType iType);
+                    Enum.TryParse(opts.Type, out BuildType bType);
+                    cfg.Add("buildType", bType);
+                    cfg.Add("inputType", iType);
+                    cfg.Add("verbose", opts.Verbose);
+                    return cfg;
+                },
+                _ => throw new Exception("failed parsing"));
+            string srcPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
+            using (var repo = new Repository(srcPath))
+            {
+                var tag = repo.Describe(repo.Head.Tip, new DescribeOptions
                 {
-                    Console.WriteLine(opts.Type);
-                    Console.WriteLine(opts.Verbose);
-                    Console.WriteLine(opts.Input);
+                    OnlyFollowFirstParent = true,
+                    Strategy = DescribeStrategy.Tags
                 });
+                TreeChanges changes = repo.Diff.Compare<TreeChanges>(
+                    repo.Lookup<Tree>("eaace96086c5cf4e461f09579c7db0177cecf749"),
+                    repo.Head.Tip.Tree
+                );
+                Console.WriteLine(changes);
+            }
         }
     }
 }
