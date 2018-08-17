@@ -19,5 +19,4 @@ namespace ContentManager
             HelpText = "Enables all logs")]
         public bool Verbose { get; set; }
     }
-
 }

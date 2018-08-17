@@ -1,84 +1,45 @@
 ﻿using System;
-using System.IO;
-using LibGit2Sharp;
 using CommandLine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ContentManager
 {
 
     class Program
     {
-        enum InputType
-        {
-            ALL,
-            BLOG,
-            FEEDS,
-            PROJECTS,
-            STUDY
-        } 
 
-        enum BuildType
+        class Configuration
         {
-            ORIGIN,
-            INCREMENTAL
+            public Types.InputType InputType { get; set; }
+            public Types.BuildType BuildType { get; set; }
+            public Boolean verbose { get; set; }
         }
 
-        public static HashSet<string> getFilesFromDiff (string pathToSrc)
+        static Configuration parseArguments (string [] args)
         {
-            using (var repo = new Repository(pathToSrc))
-            {
-                string tag = repo.Describe(repo.Head.Tip, new DescribeOptions
-                {
-                    OnlyFollowFirstParent = true,
-                    MinimumCommitIdAbbreviatedSize = 0,
-                    Strategy = DescribeStrategy.Tags
-                });
-                Tag lastTag = repo.Tags[tag];
-                Commit commitFromLastTag = repo.Lookup<Commit>(lastTag.Target.Sha);
-                TreeChanges changes = repo.Diff.Compare<TreeChanges>(
-                    commitFromLastTag.Tree,
-                    repo.Head.Tip.Tree
-                );
-                HashSet<string> paths = new HashSet<string>();
-                foreach (TreeEntryChanges ch in changes)
-                {
-                    paths.Add(ch.Path);
-                }
-                return paths;
-            }
-        }
-
-        public static HashSet<string> getAllFiles (string pathToSrc)
-        {
-            HashSet<string> paths = new HashSet<string>();
-            foreach (string d in Directory.GetDirectories(pathToSrc))
-            {
-                foreach (string f in Directory.GetFiles(d, "*"))
-                {
-                    paths.Add(f);
-                }
-            }
-            return paths;
+            var config = new Configuration();
+            Parser.Default.ParseArguments<Options>(args)
+                .MapResult(opts => {
+                    Enum.TryParse(opts.Input, out Types.InputType iType);
+                    Enum.TryParse(opts.Type, out Types.BuildType bType);
+                    config.BuildType = bType;
+                    config.InputType = iType;
+                    config.verbose = opts.Verbose;
+                    return opts;
+                },
+                _ => throw new Exception("failed parsing"));
+            return config;
         }
 
         static void Main(string[] args)
         {
-            var config = Parser.Default.ParseArguments<Options>(args)
-                .MapResult(opts => {
-                    var cfg = new Dictionary<string, object>();
-                    Enum.TryParse(opts.Input, out InputType iType);
-                    Enum.TryParse(opts.Type, out BuildType bType);
-                    cfg.Add("buildType", bType);
-                    cfg.Add("inputType", iType);
-                    cfg.Add("verbose", opts.Verbose);
-                    return cfg;
-                },
-                _ => throw new Exception("failed parsing"));
-            string srcPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
-            Dictionary<string, HashSet<string>> AllPaths = new Dictionary<string, HashSet<string>>();
-            AllPaths.Add("blog", )
-            var files = getAllFiles(srcPath);
+            var configuration = parseArguments(args);
+            var mTypes = Types.GetAllTypes(configuration.InputType);
+            var srcPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
+            var files = configuration.BuildType == Types.BuildType.origin ? 
+                GetFiles.getAllFiles(mTypes, srcPath) : GetFiles.getFilesFromDiff(srcPath);
+
         }
     }
 }

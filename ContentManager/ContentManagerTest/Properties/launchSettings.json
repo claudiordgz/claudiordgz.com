@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ContentManagerTest": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "CODEBUILD_SRC_DIR": "D:\\workspace\\claudiordgz-website\\content"
+      }
+    }
+  }
+}
