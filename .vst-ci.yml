@@ -1,0 +1,21 @@
+queue: Hosted VS2017
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: Build
+  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager
+- script: dotnet test -p:CollectCoverage=true -p:Threshold=90 -p:CoverletOutputFormat=cobertura -p:CoverletOutput=./Coverage
+  displayName: Test
+  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager.Test
+- script: dotnet reportgenerator -reports:Coverage\coverage.cobertura.xml -targetdir:Coverage\Report -reporttypes:HTMLInline
+  displayName: Reports
+  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager.Test
+- task: build
+  command:
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: cobertura
+    summaryFileLocation:  $(system.defaultWorkingDirectory)\ContentManager.Test\coverage.cobertura.xml
+    reportDirectory: $(system.defaultWorkingDirectory)\ContentManager.Test\Coverage\Report
