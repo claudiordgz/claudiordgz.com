@@ -8,12 +8,12 @@ steps:
   workingDirectory: $(system.defaultWorkingDirectory)\ContentManager
 - script: dotnet test -p:CollectCoverage=true -p:Threshold=90 -p:CoverletOutputFormat=cobertura -p:CoverletOutput=./Coverage
   displayName: Test
-  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager.Test
+  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager\ContentManager.Test
 - script: dotnet reportgenerator -reports:Coverage\coverage.cobertura.xml -targetdir:Coverage\Report -reporttypes:HTMLInline
   displayName: Reports
-  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager.Test
+  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager\ContentManager.Test
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: cobertura
-    summaryFileLocation:  $(system.defaultWorkingDirectory)\ContentManager.Test\coverage.cobertura.xml
-    reportDirectory: $(system.defaultWorkingDirectory)\ContentManager.Test\Coverage\Report
+    summaryFileLocation:  $(system.defaultWorkingDirectory)\ContentManager\ContentManager.Test\coverage.cobertura.xml
+    reportDirectory: $(system.defaultWorkingDirectory)\ContentManager\ContentManager.Test\Coverage\Report
