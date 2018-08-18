@@ -12,8 +12,6 @@ steps:
 - script: dotnet reportgenerator -reports:Coverage\coverage.cobertura.xml -targetdir:Coverage\Report -reporttypes:HTMLInline
   displayName: Reports
   workingDirectory: $(system.defaultWorkingDirectory)\ContentManager.Test
-- task: build
-  command:
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: cobertura
