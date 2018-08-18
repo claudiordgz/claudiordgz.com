@@ -21,7 +21,7 @@ namespace ContentManager
             incremental
         }
 
-        public static Dictionary<InputType, List<string>> GetAllTypes(InputType iType)
+        public static Dictionary<InputType, List<string>> GetTypes(InputType iType)
         {
             if (iType == InputType.all)
             {

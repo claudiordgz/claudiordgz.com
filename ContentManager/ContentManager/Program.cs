@@ -35,7 +35,7 @@ namespace ContentManager
         static void Main(string[] args)
         {
             var configuration = parseArguments(args);
-            var mTypes = Types.GetAllTypes(configuration.InputType);
+            var mTypes = Types.GetTypes(configuration.InputType);
             var srcPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
             var files = configuration.BuildType == Types.BuildType.origin ? 
                 GetFiles.getAllFiles(mTypes, srcPath) : GetFiles.getFilesFromDiff(srcPath);

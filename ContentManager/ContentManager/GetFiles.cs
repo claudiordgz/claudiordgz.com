@@ -55,7 +55,7 @@ namespace ContentManager
             }
         }
 
-        private static IEnumerable<string> Blog (string path)
+        private static IEnumerable<string> Blog(string path)
         {
             foreach (string d in Directory.GetDirectories(path))
             {
