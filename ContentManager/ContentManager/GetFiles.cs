@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using LibGit2Sharp;
 using System.Collections.Generic;
 
@@ -7,7 +8,7 @@ namespace ContentManager
 {
     public static class GetFiles
     {
-        public static Dictionary<Types.InputType, HashSet<string>> getFilesFromDiff(string pathToSrc)
+        public static Dictionary<Types.InputType, IEnumerable<string>> getFilesFromDiff(string pathToSrc)
         {
             using (var repo = new Repository(pathToSrc))
             {
@@ -23,108 +24,104 @@ namespace ContentManager
                     commitFromLastTag.Tree,
                     repo.Head.Tip.Tree
                 );
-                var paths = new Dictionary<Types.InputType, HashSet<string>>
+                var paths = new Dictionary<Types.InputType, IEnumerable<string>>
                 {
-                    { Types.InputType.blog, new HashSet<string>() },
-                    { Types.InputType.feeds, new HashSet<string>() },
-                    { Types.InputType.projects, new HashSet<string>() },
-                    { Types.InputType.study, new HashSet<string>() }
+                    { Types.InputType.blog, new List<string>() },
+                    { Types.InputType.feeds, new List<string>() },
+                    { Types.InputType.projects, new List<string>() },
+                    { Types.InputType.study, new List<string>() }
                 };
                 foreach (TreeEntryChanges ch in changes)
                 {
                     var p = ch.Path;
                     if (p.StartsWith(Types.InputType.blog.ToString("G")))
                     {
-                        paths[Types.InputType.blog].Add(p);
+                        paths[Types.InputType.blog].ToList().Add(p);
                     }
                     else if (p.StartsWith(Types.InputType.feeds.ToString("G")))
                     {
-                        paths[Types.InputType.feeds].Add(p);
+                        paths[Types.InputType.feeds].ToList().Add(p);
                     }
                     else if (p.StartsWith(Types.InputType.projects.ToString("G")))
                     {
-                        paths[Types.InputType.projects].Add(p);
+                        paths[Types.InputType.projects].ToList().Add(p);
                     }
                     else if (p.StartsWith(Types.InputType.study.ToString("G")))
                     {
-                        paths[Types.InputType.study].Add(p);
+                        paths[Types.InputType.study].ToList().Add(p);
                     } // else ignore
                 }
                 return paths;
             }
         }
 
-        private static HashSet<string> blog (string path)
+        private static IEnumerable<string> Blog (string path)
         {
-            HashSet<string> paths = new HashSet<string>();
             foreach (string d in Directory.GetDirectories(path))
             {
                 foreach (string f in Directory.GetFiles(d, "*"))
                 {
-                    paths.Add(f);
+                    yield return f;
                 }
             }
-            return paths;
         }
 
-        private static HashSet<string> feeds(string path)
+        private static IEnumerable<string> Feeds(string path)
         {
-            HashSet<string> paths = new HashSet<string>();
             foreach (string f in Directory.GetFiles(path, "*"))
             {
-                paths.Add(f);
+                var extension = Path.GetExtension(f);
+                if (extension.Contains("xml") || extension.Contains("opml"))
+                {
+                    yield return f;
+                }
             }
-            return paths;
         }
 
-        private static HashSet<string> projects(string path)
+        private static IEnumerable<string> ListOfLists (string path)
         {
-            HashSet<string> paths = new HashSet<string>();
             foreach (string d in Directory.GetDirectories(path))
             {
                 foreach (string f in Directory.GetFiles(d, "*"))
                 {
-                    paths.Add(f);
+                    yield return f;
                 }
-            }
-            return paths;
-        }
-
-        private static HashSet<string> study(string path)
-        {
-            HashSet<string> paths = new HashSet<string>();
-            foreach (string d in Directory.GetDirectories(path))
-            {
-                foreach (string f in Directory.GetFiles(d, "*"))
+                foreach (string innerD in Directory.GetDirectories(d, "*"))
                 {
-                    paths.Add(f);
+                    foreach (string f in Directory.GetFiles(innerD, "*"))
+                    {
+                        yield return f;
+                    }
                 }
             }
-            return paths;
         }
 
-        private static Dictionary<Types.InputType, Func<string, HashSet<string>>> TypeToImplementationDict()
+        private static IEnumerable<string> Projects(string path) { return ListOfLists(path); }
+
+        private static IEnumerable<string> Study(string path) { return ListOfLists(path); }
+
+        private static Dictionary<Types.InputType, Func<string, IEnumerable<string>>> TypeToImplementationDict()
         {
-            var config = new Dictionary<Types.InputType, Func<string, HashSet<string>>>
+            var config = new Dictionary<Types.InputType, Func<string, IEnumerable<string>>>
             {
-                { Types.InputType.blog, blog },
-                { Types.InputType.feeds, feeds },
-                { Types.InputType.projects, projects },
-                { Types.InputType.study, study }
+                { Types.InputType.blog, Blog },
+                { Types.InputType.feeds, Feeds },
+                { Types.InputType.projects, Projects },
+                { Types.InputType.study, Study }
             };
             return config;
         }
 
-        public static Dictionary<Types.InputType, HashSet<string>> getAllFiles(Dictionary<Types.InputType, List<string>> types, string pathToSrc)
+        public static Dictionary<Types.InputType, IEnumerable<string>> getAllFiles(Dictionary<Types.InputType, List<string>> types, string pathToSrc)
         {
-            var paths = new Dictionary<Types.InputType, HashSet<string>> ();
+            var paths = new Dictionary<Types.InputType, IEnumerable<string>> ();
             var configuration = TypeToImplementationDict();
             foreach(var entry in types)
             {
                 var pathToPosts = Path.Combine(pathToSrc, entry.Key.ToString("G"));
                 var impl = configuration[entry.Key];
-                var list = impl(pathToPosts);
-                paths.Add(entry.Key, list);
+                var generator = impl(pathToPosts);
+                paths.Add(entry.Key, generator);
             }
             return paths;
         }
