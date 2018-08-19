@@ -5,18 +5,18 @@ variables:
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: Build
-  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager
+  workingDirectory: $(system.defaultWorkingDirectory)/ContentManager
 - script: dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=./Coverage/ > Coverage/coverage.output
   displayName: Test
-  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager\ContentManager.Test
-- script: dotnet reportgenerator -reports:Coverage\coverage.cobertura.xml -targetdir:Coverage\Report -reporttypes:HTMLInline
+  workingDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test
+- script: dotnet reportgenerator -reports:Coverage/coverage.cobertura.xml -targetdir:Coverage/Report -reporttypes:HTMLInline
   displayName: Reports
-  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager\ContentManager.Test
+  workingDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: cobertura
-    summaryFileLocation:  $(system.defaultWorkingDirectory)\ContentManager\ContentManager.Test\coverage.cobertura.xml
-    reportDirectory: $(system.defaultWorkingDirectory)\ContentManager\ContentManager.Test\Coverage\Report
+    summaryFileLocation:  $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/coverage.cobertura.xml
+    reportDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/Coverage/Report
 - script: node checkCoverage.js
   displayName: Coverage Threshold
-  workingDirectory: $(system.defaultWorkingDirectory)\ContentManager\ContentManager.Test\scripts
+  workingDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/scripts
