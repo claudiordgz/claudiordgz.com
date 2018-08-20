@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\contentManager\ContentManager.csproj" />
+    <ProjectReference Include="..\ContentManager\ContentManager.csproj" />
   </ItemGroup>
 
 </Project>
