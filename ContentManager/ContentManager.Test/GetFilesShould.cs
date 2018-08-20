@@ -9,7 +9,7 @@ namespace ContentManager.Tests
         internal static string getSrcPath ()
         {
             var binPath = Directory.GetCurrentDirectory();
-            var rPath = Path.Combine(binPath, "..\\..\\..\\..\\..");
+            var rPath = Path.Combine(binPath, "../../../../..");
             return Path.GetFullPath((new Uri(rPath)).LocalPath);
         }
 
