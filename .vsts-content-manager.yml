@@ -15,7 +15,7 @@ steps:
 - task: PublishCodeCoverageResults@1
   inputs:
     codeCoverageTool: cobertura
-    summaryFileLocation:  $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/coverage.cobertura.xml
+    summaryFileLocation:  $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/Coverage/coverage.cobertura.xml
     reportDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/Coverage/Report
 - script: node checkCoverage.js
   displayName: Coverage Threshold
