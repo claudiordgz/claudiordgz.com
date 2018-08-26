@@ -40,7 +40,7 @@ namespace ContentManager.Test
 
         [Theory]
         [MemberData(nameof(GetData))]
-        public void ReturnsContentSpecificFolder(Types.InputType type, IEnumerable<string> list)
+        public void ReturnsContentSpecificFolder(Types.InputType type, IEnumerable<string> list, int fileCount)
         {
             var mockRepo = new Mock<IRepository>();
             var srcPath = GetSrc.SrcPath();
@@ -50,6 +50,7 @@ namespace ContentManager.Test
             foreach (var entry in files)
             {
                 Assert.Equal(type, entry.Key);
+                Assert.Equal(fileCount, entry.Value.Count());
                 foreach (var file in entry.Value)
                 {
                     AnallyExpect.MarkDownOrXmlFiles(file);
@@ -64,6 +65,8 @@ namespace ContentManager.Test
                 ".gitignore",
                 ".vsts-content-manager.yml",
                 "ContentManager/ContentManager.Test/ContentManager.Test.csproj",
+                "blog/README.md",
+                "blog/LICENSE",
                 "blog/posts/about-me.md",
                 "blog/posts/abstract-factory-cpp.md",
                 "blog/posts/ad-generator-thoughts-after-first-commit.md"
@@ -98,10 +101,10 @@ namespace ContentManager.Test
             };
             var allData = new List<object[]>
             {
-                new object[] { Types.InputType.blog, blogChanges },
-                new object[] { Types.InputType.feeds, feedChanges },
-                new object[] { Types.InputType.projects, projectChanges },
-                new object[] { Types.InputType.study, studyChanges },
+                new object[] { Types.InputType.blog, blogChanges, 3 },
+                new object[] { Types.InputType.feeds, feedChanges, 1 },
+                new object[] { Types.InputType.projects, projectChanges, 2 },
+                new object[] { Types.InputType.study, studyChanges, 2 },
             };
             return allData;
         }

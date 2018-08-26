@@ -1,7 +1,9 @@
 using CommandLine;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ContentManager
 {
+    [ExcludeFromCodeCoverage]
     class Options
     {
         [Option('t', "type",

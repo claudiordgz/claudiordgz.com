@@ -21,25 +21,22 @@ namespace ContentManager
             incremental
         }
 
-        public static Dictionary<InputType, List<string>> GetTypes(InputType iType)
+        public static List<InputType> GetTypes(InputType iType)
         {
             if (iType == InputType.all)
             {
-                var mTypes = new Dictionary<InputType, List<string>>
+                var mTypes = new List<InputType>
                 {
-                    { InputType.blog, new List<string>() },
-                    { InputType.feeds, new List<string>() },
-                    { InputType.projects, new List<string>() },
-                    { InputType.study, new List<string>() }
+                    InputType.blog,
+                    InputType.feeds,
+                    InputType.projects,
+                    InputType.study
                 };
                 return mTypes;
             }
             else
             {
-                var mTypes = new Dictionary<InputType, List<string>>
-                {
-                    { iType, new List<string>() }
-                };
+                var mTypes = new List<InputType>{ iType };
                 return mTypes;
             }
         }

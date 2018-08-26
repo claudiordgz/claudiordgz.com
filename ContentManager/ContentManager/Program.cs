@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Linq;
 using CommandLine;
 using System.Collections.Generic;
-using System.Linq;
 using LibGit2Sharp;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ContentManager
 {
@@ -10,14 +11,8 @@ namespace ContentManager
     class Program
     {
 
-        class Configuration
-        {
-            public Types.InputType InputType { get; set; }
-            public Types.BuildType BuildType { get; set; }
-            public Boolean Verbose { get; set; }
-        }
-
-        static Configuration parseArguments (string [] args)
+        [ExcludeFromCodeCoverage]
+        static Configuration ParseArguments (string [] args)
         {
             var config = new Configuration();
             Parser.Default.ParseArguments<Options>(args)
@@ -33,23 +28,27 @@ namespace ContentManager
             return config;
         }
 
+        [ExcludeFromCodeCoverage]
+        static Dictionary<Types.InputType, IEnumerable<string>> WrapGit(Configuration configuration)
+        {
+            using (var repo = new Repository(configuration.RootPath))
+            {
+                var gitHelper = new GetFilesFromDiff(repo, configuration.RootPath);
+                var f = gitHelper.getFilesFromDiff();
+                var files = f.Where(item => configuration.TypesToProcess.Contains(item.Key))
+                    .ToDictionary(p => p.Key, p => p.Value);
+                return files;
+            }
+        }
+
+        [ExcludeFromCodeCoverage]
         static void Main(string[] args)
         {
-            var configuration = parseArguments(args);
-            var mTypes = Types.GetTypes(configuration.InputType);
-            var srcPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
-            if (configuration.BuildType == Types.BuildType.incremental)
-            {
-                var files = GetAllFiles.getAllFiles(mTypes, srcPath);
-            } else
-            {
-                using (var repo = new Repository(srcPath))
-                {
-                    var gitHelper = new GetFilesFromDiff(repo, srcPath);
-                    var files = gitHelper.getFilesFromDiff();
-                } 
-            }
-
+            var configuration = ParseArguments(args);
+            configuration.TypesToProcess = Types.GetTypes(configuration.InputType);
+            configuration.RootPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
+            Func<Configuration, Dictionary<Types.InputType, IEnumerable<string>>> gitHelper = WrapGit;
+            var files = GetFiles.FromBuildType(configuration, gitHelper);
         }
     }
 }

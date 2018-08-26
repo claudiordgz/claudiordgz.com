@@ -56,8 +56,11 @@ namespace ContentManager
                     {
                         paths[Types.InputType.blog] = blog;
                     }
-                    var nP = CombinePaths(_pathToSrc, p);
-                    blog.Add(nP);
+                    if (!ShouldDiscardPath(p))
+                    {
+                        var nP = CombinePaths(_pathToSrc, p);
+                        blog.Add(nP);
+                    }
                 }
                 else if (p.StartsWith(Types.InputType.feeds.ToString("G")))
                 {

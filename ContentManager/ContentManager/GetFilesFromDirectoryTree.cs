@@ -4,8 +4,18 @@ using System.IO;
 
 namespace ContentManager
 {
-    public static class GetAllFiles
+    /// <summary>
+    /// Utilities to retrieve files from content directory
+    /// </summary>
+    public static class GetFilesFromDirectoryTree
     {
+        /// <summary>
+        /// Generator for Blog files to process.
+        /// We don't care for files under root blog/ folder, 
+        /// only those under posts and pages
+        /// </summary>
+        /// <param name="path">Complete path (preferably) to blog folder</param>
+        /// <returns>Generator for the files</returns>
         private static IEnumerable<string> Blog(string path)
         {
             foreach (string d in Directory.GetDirectories(path))
@@ -63,18 +73,23 @@ namespace ContentManager
             return config;
         }
 
-        public static Dictionary<Types.InputType, IEnumerable<string>> getAllFiles(Dictionary<Types.InputType, List<string>> types, string pathToSrc)
+        public static Dictionary<Types.InputType, IEnumerable<string>> GetAllFiles(List<Types.InputType> types, string pathToSrc)
         {
             var paths = new Dictionary<Types.InputType, IEnumerable<string>>();
             var configuration = TypeToImplementationDict();
             foreach (var entry in types)
             {
-                var pathToPosts = Path.Combine(pathToSrc, entry.Key.ToString("G"));
-                var impl = configuration[entry.Key];
+                var pathToPosts = Path.Combine(pathToSrc, entry.ToString("G"));
+                var impl = configuration[entry];
                 var generator = impl(pathToPosts);
-                paths.Add(entry.Key, generator);
+                paths.Add(entry, generator);
             }
             return paths;
+        }
+
+        public static Dictionary<Types.InputType, IEnumerable<string>> GetAllFiles(Configuration configuration)
+        {
+            return GetAllFiles(configuration.TypesToProcess, configuration.RootPath);
         }
     }
 }
