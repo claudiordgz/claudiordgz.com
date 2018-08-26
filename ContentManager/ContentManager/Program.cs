@@ -2,6 +2,7 @@
 using CommandLine;
 using System.Collections.Generic;
 using System.Linq;
+using LibGit2Sharp;
 
 namespace ContentManager
 {
@@ -13,7 +14,7 @@ namespace ContentManager
         {
             public Types.InputType InputType { get; set; }
             public Types.BuildType BuildType { get; set; }
-            public Boolean verbose { get; set; }
+            public Boolean Verbose { get; set; }
         }
 
         static Configuration parseArguments (string [] args)
@@ -25,7 +26,7 @@ namespace ContentManager
                     Enum.TryParse(opts.Type, out Types.BuildType bType);
                     config.BuildType = bType;
                     config.InputType = iType;
-                    config.verbose = opts.Verbose;
+                    config.Verbose = opts.Verbose;
                     return opts;
                 },
                 _ => throw new Exception("failed parsing"));
@@ -37,8 +38,17 @@ namespace ContentManager
             var configuration = parseArguments(args);
             var mTypes = Types.GetTypes(configuration.InputType);
             var srcPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
-            var files = configuration.BuildType == Types.BuildType.origin ? 
-                GetFiles.getAllFiles(mTypes, srcPath) : GetFiles.getFilesFromDiff(srcPath);
+            if (configuration.BuildType == Types.BuildType.incremental)
+            {
+                var files = GetAllFiles.getAllFiles(mTypes, srcPath);
+            } else
+            {
+                using (var repo = new Repository(srcPath))
+                {
+                    var gitHelper = new GetFilesFromDiff(repo, srcPath);
+                    var files = gitHelper.getFilesFromDiff();
+                } 
+            }
 
         }
     }
