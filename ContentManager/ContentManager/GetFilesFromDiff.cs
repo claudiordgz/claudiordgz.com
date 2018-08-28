@@ -104,6 +104,11 @@ namespace ContentManager
             return paths;
         }
 
+        public static IEnumerable<string> FilterTreeChangesToPaths (TreeChanges changes)
+        {
+            return changes.Select(x => x.Path);
+        }
+
         [ExcludeFromCodeCoverage]
         public Dictionary<Types.InputType, IEnumerable<string>> getFilesFromDiff()
         {
@@ -119,7 +124,7 @@ namespace ContentManager
                 commitFromLastTag.Tree,
                 _repo.Head.Tip.Tree
             );
-            var changedPaths = changes.Select(x => x.Path);
+            var changedPaths = FilterTreeChangesToPaths(changes);
             return packPaths(changedPaths);
         }
 

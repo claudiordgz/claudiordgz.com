@@ -10,5 +10,10 @@ namespace ContentManager
         public Boolean Verbose { get; set; }
         public string RootPath { get; set; }
         public List<Types.InputType> TypesToProcess { get; set; }
+
+        public List<Types.InputType> GetTypes()
+        {
+            return Types.GetTypes(InputType);
+        }
     }
 }

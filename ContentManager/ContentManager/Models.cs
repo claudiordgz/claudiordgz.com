@@ -5,28 +5,28 @@ using System.Text;
 namespace ContentManager.Models
 {
     // so far image, video... audio maybe?
-    class Thumbnail
+    public class Thumbnail
     {
         public string Id { get; set; }
         public string File { get; set; }
         public string Type { get; set; }
     }
 
-    class Author
+    public class Author
     {
         public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
     }
 
-    enum Status
+    public enum Status
     {
         published,
         unpublished,
         draft
     }
 
-    interface ITease
+    public interface ITease
     {
         string Headline { get; set; }
         string Summary { get; set; }
@@ -35,10 +35,10 @@ namespace ContentManager.Models
         List<string> Tags { get; set; }
         string CreationDate { get; set; }
         string UpdateDate { get; set; }
-        Author Author { get; set; }
+        List<Author> Author { get; set; }
     }
 
-    class BlogPost : ITease
+    public class BlogPost : ITease
     {
         public string Headline { get; set; }
         public string Summary { get; set; }
@@ -47,12 +47,12 @@ namespace ContentManager.Models
         public List<string> Tags { get; set; }
         public string CreationDate { get; set; }
         public string UpdateDate { get; set; }
-        public Author Author { get; set; }
+        public List<Author> Author { get; set; }
         public Status Status { get; set; }
         public List<string> Content { get; set; }
     }
 
-    class FeedPost : ITease
+    public class FeedPost : ITease
     {
         public string Headline { get; set; }
         public string Summary { get; set; }
@@ -61,12 +61,12 @@ namespace ContentManager.Models
         public List<string> Tags { get; set; }
         public string CreationDate { get; set; }
         public string UpdateDate { get; set; }
-        public Author Author { get; set; }
+        public List<Author> Author { get; set; }
         public string FeedId { get; set; }
         public List<string> Content { get; set; }
     }
 
-    class ProjectPost : ITease
+    public class ProjectPost : ITease
     {
         public string Headline { get; set; }
         public string Summary { get; set; }
@@ -75,13 +75,13 @@ namespace ContentManager.Models
         public List<string> Tags { get; set; }
         public string CreationDate { get; set; }
         public string UpdateDate { get; set; }
-        public Author Author { get; set; }
+        public List<Author> Author { get; set; }
         public string ProjectId { get; set; }
         public Status Status { get; set; }
         public List<string> Content { get; set; }
     }
 
-    class StudyPost : ITease
+    public class StudyPost : ITease
     {
         public string Headline { get; set; }
         public string Summary { get; set; }
@@ -90,13 +90,13 @@ namespace ContentManager.Models
         public List<string> Tags { get; set; }
         public string CreationDate { get; set; }
         public string UpdateDate { get; set; }
-        public Author Author { get; set; }
+        public List<Author> Author { get; set; }
         public string StudyId { get; set; }
         public Status Status { get; set; }
         public List<string> Content { get; set; }
     }
 
-    class Feed : ITease
+    public class Feed : ITease
     {
         public string Headline { get; set; }
         public string Summary { get; set; }
@@ -105,11 +105,11 @@ namespace ContentManager.Models
         public List<string> Tags { get; set; }
         public string CreationDate { get; set; }
         public string UpdateDate { get; set; }
-        public Author Author { get; set; }
+        public List<Author> Author { get; set; }
         public string SourceUrl { get; set; }
     }
 
-    class Project : ITease
+    public class Project : ITease
     {
         public string Headline { get; set; }
         public string Summary { get; set; }
@@ -118,10 +118,10 @@ namespace ContentManager.Models
         public List<string> Tags { get; set; }
         public string CreationDate { get; set; }
         public string UpdateDate { get; set; }
-        public Author Author { get; set; }
+        public List<Author> Author { get; set; }
     }
 
-    class Study : ITease
+    public class Study : ITease
     {
         public string Headline { get; set; }
         public string Summary { get; set; }
@@ -130,6 +130,6 @@ namespace ContentManager.Models
         public List<string> Tags { get; set; }
         public string CreationDate { get; set; }
         public string UpdateDate { get; set; }
-        public Author Author { get; set; }
+        public List<Author> Author { get; set; }
     }
 }

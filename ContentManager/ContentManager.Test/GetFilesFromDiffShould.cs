@@ -54,6 +54,7 @@ namespace ContentManager.Test
                 foreach (var file in entry.Value)
                 {
                     AnallyExpect.MarkDownOrXmlFiles(file);
+                    Assert.Contains(type.ToString("g"), file);
                 }
             }
         }

@@ -27,6 +27,12 @@ namespace ContentManager
             }
         }
 
+        /// <summary>
+        /// Returns all files of type xml or opml from which we can
+        /// retrieve feeds from
+        /// </summary>
+        /// <param name="path">Path to feeds directory</param>
+        /// <returns>Generator of .opml and .xml files</returns>
         private static IEnumerable<string> Feeds(string path)
         {
             foreach (string f in Directory.GetFiles(path, "*"))

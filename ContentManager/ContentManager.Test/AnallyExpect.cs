@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
@@ -19,9 +20,11 @@ namespace ContentManager.Test
             Assert.Equal(4, files.Count);
             foreach (var entry in files)
             {
+                var type = entry.Key;
                 foreach (var file in entry.Value)
                 {
                     MarkDownOrXmlFiles(file);
+                    Assert.Contains(type.ToString("g"), file);
                 }
             }
         }
@@ -36,6 +39,7 @@ namespace ContentManager.Test
                 foreach (var file in entry.Value)
                 {
                     MarkDownOrXmlFiles(file);
+                    Assert.Contains(type.ToString("g"), file);
                 }
             }
         }

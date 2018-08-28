@@ -1,9 +1,12 @@
 const { readFileSync } = require('fs')
 
-function checkPercentage (percentage) {
-  if (percentage < 90) {
-    console.error(`Percentage ${percentage}% did not pass threshold of 90%`)
+function checkPercentage(percentage) {
+  const threshold = 60
+  if (percentage < threshold) {
+    console.error(`Percentage ${percentage}% did not pass threshold of ${threshold}%`)
     process.exit(1)
+  } else {
+    console.log(`Percentage ${percentage}% passed threshold of ${threshold}%`)
   }
 }
 
@@ -11,8 +14,10 @@ function main () {
   const fileContents = readFileSync('../Coverage/coverage.output').toString()
   const mainOutput = fileContents.substr(fileContents.indexOf('+---'), fileContents.lastIndexOf('---+'))
   const pieces = mainOutput.replace(/(\r\n\t|\n|\r\t)/g, '').split('|')
-  pieces.forEach(v => {
-    if (v.indexOf('%') !== -1) {
+  let count = 0
+  pieces.forEach((v) => {
+    if (v.indexOf('%') !== -1 && count < 2) {
+      count += 1
       checkPercentage(Number(v.replace(/%/g, '').trim()))
     }
   })

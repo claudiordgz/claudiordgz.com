@@ -10,22 +10,30 @@ namespace ContentManager
 
     class Program
     {
+        public static Options MapOptionsToResults (Configuration config, Options opts)
+        {
+            Enum.TryParse(opts.Input, out Types.InputType iType);
+            Enum.TryParse(opts.Type, out Types.BuildType bType);
+            config.BuildType = bType;
+            config.InputType = iType;
+            config.Verbose = opts.Verbose;
+            return opts;
+        }
 
         [ExcludeFromCodeCoverage]
         static Configuration ParseArguments (string [] args)
         {
             var config = new Configuration();
             Parser.Default.ParseArguments<Options>(args)
-                .MapResult(opts => {
-                    Enum.TryParse(opts.Input, out Types.InputType iType);
-                    Enum.TryParse(opts.Type, out Types.BuildType bType);
-                    config.BuildType = bType;
-                    config.InputType = iType;
-                    config.Verbose = opts.Verbose;
-                    return opts;
-                },
+                .MapResult(opts => MapOptionsToResults(config, opts),
                 _ => throw new Exception("failed parsing"));
             return config;
+        }
+
+        public static Dictionary<Types.InputType, IEnumerable<string>> FilterByTypes (Dictionary<Types.InputType, IEnumerable<string>> files, Configuration configuration)
+        {
+            return files.Where(item => configuration.TypesToProcess.Contains(item.Key))
+                    .ToDictionary(p => p.Key, p => p.Value);
         }
 
         [ExcludeFromCodeCoverage]
@@ -35,9 +43,7 @@ namespace ContentManager
             {
                 var gitHelper = new GetFilesFromDiff(repo, configuration.RootPath);
                 var f = gitHelper.getFilesFromDiff();
-                var files = f.Where(item => configuration.TypesToProcess.Contains(item.Key))
-                    .ToDictionary(p => p.Key, p => p.Value);
-                return files;
+                return FilterByTypes(f, configuration);
             }
         }
 
@@ -45,7 +51,7 @@ namespace ContentManager
         static void Main(string[] args)
         {
             var configuration = ParseArguments(args);
-            configuration.TypesToProcess = Types.GetTypes(configuration.InputType);
+            configuration.TypesToProcess = configuration.GetTypes();
             configuration.RootPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
             Func<Configuration, Dictionary<Types.InputType, IEnumerable<string>>> gitHelper = WrapGit;
             var files = GetFiles.FromBuildType(configuration, gitHelper);

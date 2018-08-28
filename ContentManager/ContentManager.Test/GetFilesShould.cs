@@ -24,10 +24,14 @@ namespace ContentManager.Test
         [Fact]
         public void ReturnsContentFromAllFolders()
         {
-            var configuration = new Configuration();
-            configuration.BuildType = Types.BuildType.origin;
-            configuration.TypesToProcess = Types.GetTypes(Types.InputType.all);
-            configuration.RootPath = GetSrc.SrcPath();
+            var configuration = new Configuration
+            {
+                InputType = Types.InputType.all,
+                BuildType = Types.BuildType.origin,
+                Verbose = false,
+                RootPath = GetSrc.SrcPath()
+            };
+            configuration.TypesToProcess = configuration.GetTypes();
             Func<Configuration, Dictionary<Types.InputType, IEnumerable<string>>> gitHelper = MockWrapGit;
             var files = GetFiles.FromBuildType(configuration, gitHelper);
             AnallyExpect.MarkdownXmlOrOpmlFilesOnAll(files);
@@ -40,10 +44,14 @@ namespace ContentManager.Test
         [InlineData(Types.InputType.study)]
         public void ReturnsContentSpecificFolder(Types.InputType type)
         {
-            var configuration = new Configuration();
-            configuration.BuildType = Types.BuildType.origin;
-            configuration.TypesToProcess = Types.GetTypes(type);
-            configuration.RootPath = GetSrc.SrcPath();
+            var configuration = new Configuration()
+            {
+                InputType = type,
+                BuildType = Types.BuildType.origin,
+                Verbose = false,
+                RootPath = GetSrc.SrcPath()
+            };
+            configuration.TypesToProcess = configuration.GetTypes();
             Func<Configuration, Dictionary<Types.InputType, IEnumerable<string>>> gitHelper = MockWrapGit;
             var files = GetFiles.FromBuildType(configuration, gitHelper);
             AnallyExpect.MarkdownXmlOrOpmlFilesOnSingleType(type, files);
