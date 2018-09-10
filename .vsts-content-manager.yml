@@ -6,7 +6,7 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: Build
   workingDirectory: $(system.defaultWorkingDirectory)/ContentManager
-- script: mkdir -p Coverage && dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=./Coverage/ > Coverage/coverage.output
+- script: mkdir -p Coverage &&  dotnet test "--logger:trx;LogFileName=results.trx" -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=./Coverage/ > Coverage/coverage.output
   displayName: Test
   workingDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test
 - script: dotnet reportgenerator -reports:Coverage/coverage.cobertura.xml -targetdir:Coverage/Report -reporttypes:HTMLInline
@@ -17,6 +17,11 @@ steps:
     codeCoverageTool: cobertura
     summaryFileLocation:  $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/Coverage/coverage.cobertura.xml
     reportDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/Coverage/Report
+- task: PublishTestResults@2
+  inputs:
+    testRunner: XUnit
+    testResultsFiles: TestResults/*.trx
+    searchFolder: $(System.DefaultWorkingDirectory)/ContentManager/ContentManager.Test
 - script: node checkCoverage.js
   displayName: Coverage Threshold
   workingDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/scripts
