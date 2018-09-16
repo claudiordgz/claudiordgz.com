@@ -4,12 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Markdig;
-using YamlDotNet.Serialization;
 using YamlDotNet.RepresentationModel;
-using System.Diagnostics;
 
 namespace ContentManager
 {
+    public class FrontMatter
+    {
+        public string Title { get; set; }
+        public string Slug { get; set; }
+        public DateTime? Published { get; set; }
+        public DateTime? Updated { get; set; }
+        public List<string> Tags { get; set; }
+        public Boolean? IsDraft { get; set; }
+    }
+
     /// <summary>
     /// Handles translating files into Objects
     /// Verifies that Each Section has it's own Metadata file if required
@@ -21,12 +29,48 @@ namespace ContentManager
     {
         public Dictionary<Types.InputType, ITease> Model { get; set; } 
 
-        public static string GetFrontMatter (string contents)
+        public static DateTime FromISODateString (string date)
         {
-            var frontMatterSeparator = "---\n";
+            return DateTime.Parse(date, null, System.Globalization.DateTimeStyles.RoundtripKind);
+        }
+
+        public static string GetNewLineSeparator (string contents)
+        {
+            var contentsPiece = contents.Substring(0, 6);
+            var newLine = contentsPiece.Contains("\r\n") ?
+                "\r\n" : "\n";
+            return newLine;
+        }
+
+        public static DateTime? GetDateTimeFieldFromMapping (YamlMappingNode mapping, string name)
+        {
+            if (mapping.Children.ContainsKey(name))
+            {
+                return FromISODateString(mapping.Children[name].ToString());
+            } else
+            {
+                return null;
+            }
+        }
+
+        public static Boolean? GetFlag(YamlMappingNode mapping, string name)
+        {
+            if (mapping.Children.ContainsKey(name))
+            {
+                return mapping.Children[name].ToString() == "true" ? true : false; 
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static FrontMatter GetFrontMatter (string contents)
+        {
+            var frontMatterSeparator = "---" + GetNewLineSeparator(contents);
             if (!contents.StartsWith(frontMatterSeparator))
             {
-                throw new Exception("Where is the FrontMatter? I need it, starts with: ---\n");
+                throw new Exception("FrontMatter: Where is the FrontMatter? I need it, starts with: ---\n");
             }
             int pFrom = contents.IndexOf(frontMatterSeparator);
             int pFromLength = frontMatterSeparator.Length;
@@ -35,20 +79,34 @@ namespace ContentManager
                 .IndexOf(frontMatterSeparator);
             if (pTo == -1)
             {
-                throw new Exception("Where is the FrontMatter Ending? I need that too, ends with: ---\n");
+                throw new Exception("FrontMatter: Where is the FrontMatter Ending? I need that too, ends with: ---\n");
             }
-            var frontMatter = contents.Substring(pFromLength, pTo);
-            var input = new StringReader(frontMatter);
+            var frontMatterYaml = contents.Substring(pFromLength, pTo);
+            var input = new StringReader(frontMatterYaml);
             var yaml = new YamlStream();
             yaml.Load(input);
-            var mapping =
-                (YamlMappingNode)yaml.Documents[0].RootNode;
-
-            foreach (var entry in mapping.Children)
+            var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
+            if (!mapping.Children.ContainsKey("title"))
             {
-                Console.WriteLine(((YamlScalarNode)entry.Key).Value);
+                throw new Exception("FrontMatter: title is mandatory");
             }
-
+            if (!mapping.Children.ContainsKey("slug"))
+            {
+                throw new Exception("FrontMatter: slug is mandatory");
+            }
+            DateTime? publishedDate = GetDateTimeFieldFromMapping(mapping, "date_published");
+            DateTime? updatedDate = GetDateTimeFieldFromMapping(mapping, "date_updated");
+            var tags = mapping.Children.ContainsKey("tags") ? new List<string>(mapping.Children["tags"].ToString().Split(',')) : new List<string>();
+            var isDraft = GetFlag(mapping, "draft");
+            var frontMatter = new FrontMatter
+            {
+                Title = mapping.Children["title"].ToString(),
+                Slug = mapping.Children["slug"].ToString(),
+                Published = publishedDate,
+                Updated = updatedDate,
+                Tags = tags,
+                IsDraft = isDraft
+            };
             return frontMatter;
         }
 
