@@ -30,7 +30,7 @@ draft: true
         public void WillExplodeIfFrontMatterHasNoStartOrEnd(string mockPost, string message)
         {
             Exception ex = Assert.Throws<FrontMatterFormatException>(() => FrontMatter.GetFrontMatter(mockPost));
-            Assert.Contains(message, ex.Message);
+            Assert.Equal(message, ex.Message);
         }
 
         [Theory]
@@ -38,7 +38,7 @@ draft: true
         public void WillExplodeIfNoTitleOrSlug(string mockPost, string message)
         {
             Exception ex = Assert.Throws<FrontMatterMissingFieldsException>(() => FrontMatter.GetFrontMatter(mockPost));
-            Assert.Contains(message, ex.Message);
+            Assert.Equal(message, ex.Message);
         }
 
         [Theory]
@@ -58,7 +58,6 @@ draft: true
         public void CheckDateTimeParsingThrows(string mockPost)
         {
             Exception ex = Assert.Throws<FormatException>(() => FrontMatter.GetFrontMatter(mockPost));
-            // Assert.Contains("string was not recognized as a valid datetime.", ex.Message.ToLower());
         }
 
         public static string mockDateTemplate = @"---
