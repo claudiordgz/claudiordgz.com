@@ -8,18 +8,12 @@ namespace ContentManager
 {
     public class FrontMatterFormatException : Exception
     {
-        public FrontMatterFormatException() { }
         public FrontMatterFormatException(string message) : base(message) { }
-        public FrontMatterFormatException(string message, Exception inner) : base(message, inner)
-        { }
     }
 
     public class FrontMatterMissingFieldsException : Exception
     {
-        public FrontMatterMissingFieldsException() { }
         public FrontMatterMissingFieldsException(string message) : base(message) { }
-        public FrontMatterMissingFieldsException(string message, Exception inner) : base(message, inner)
-        { }
     }
 
     public class FrontMatter
