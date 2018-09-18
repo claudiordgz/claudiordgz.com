@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ContentManager.FileManagement;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
@@ -17,7 +18,7 @@ draft: true
 ---
 <my-component>Some-data</my-component>
 ";
-            var frontMatter = FrontMatter.GetFrontMatter(mockPost);
+            var frontMatter = FrontMatterManager.GetFrontMatter(mockPost);
             Assert.Equal("Docker Installation Notes", frontMatter.Title);
             Assert.Equal("docker-installation-notes", frontMatter.Slug);
             Assert.Null(frontMatter.Published);
@@ -29,7 +30,7 @@ draft: true
         [MemberData(nameof(GetFrontMatterFormatExceptionPosts))]
         public void WillExplodeIfFrontMatterHasNoStartOrEnd(string mockPost, string message)
         {
-            Exception ex = Assert.Throws<FrontMatterFormatException>(() => FrontMatter.GetFrontMatter(mockPost));
+            Exception ex = Assert.Throws<FrontMatterFormatException>(() => FrontMatterManager.GetFrontMatter(mockPost));
             Assert.Equal(message, ex.Message);
         }
 
@@ -37,7 +38,7 @@ draft: true
         [MemberData(nameof(GetFrontMatterMissingFieldsExceptionPosts))]
         public void WillExplodeIfNoTitleOrSlug(string mockPost, string message)
         {
-            Exception ex = Assert.Throws<FrontMatterMissingFieldsException>(() => FrontMatter.GetFrontMatter(mockPost));
+            Exception ex = Assert.Throws<FrontMatterMissingFieldsException>(() => FrontMatterManager.GetFrontMatter(mockPost));
             Assert.Equal(message, ex.Message);
         }
 
@@ -45,9 +46,9 @@ draft: true
         [MemberData(nameof(GetDatesAndMockPost))]
         public void ParsesDateTimesAndIsDraftNull(string mockPost, string publishedDate, string updatedDate)
         {
-            var frontMatter = FrontMatter.GetFrontMatter(mockPost);
-            string pbDate = FrontMatter.FromDateTimeString(frontMatter.Published.Value);
-            string upDate = FrontMatter.FromDateTimeString(frontMatter.Updated.Value);
+            var frontMatter = FrontMatterManager.GetFrontMatter(mockPost);
+            string pbDate = FrontMatterManager.FromDateTimeString(frontMatter.Published.Value);
+            string upDate = FrontMatterManager.FromDateTimeString(frontMatter.Updated.Value);
             Assert.Equal(publishedDate, pbDate);
             Assert.Equal(updatedDate, upDate);
             Assert.Null(frontMatter.IsDraft);
@@ -57,7 +58,7 @@ draft: true
         [MemberData(nameof(GetDatesExceptions))]
         public void CheckDateTimeParsingThrows(string mockPost)
         {
-            Exception ex = Assert.Throws<FormatException>(() => FrontMatter.GetFrontMatter(mockPost));
+            Exception ex = Assert.Throws<FormatException>(() => FrontMatterManager.GetFrontMatter(mockPost));
         }
 
         public static string mockDateTemplate = @"---

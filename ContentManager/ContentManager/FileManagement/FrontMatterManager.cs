@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using YamlDotNet.RepresentationModel;
 
-namespace ContentManager
+namespace ContentManager.FileManagement
 {
     public class FrontMatterFormatException : Exception
     {
@@ -23,8 +23,11 @@ namespace ContentManager
         public DateTime? Published { get; set; }
         public DateTime? Updated { get; set; }
         public List<string> Tags { get; set; }
-        public Boolean? IsDraft { get; set; }
+        public bool? IsDraft { get; set; }
+    }
 
+    public class FrontMatterManager
+    {
         /// <summary>
         /// Parse ISO 8601 String date (e.g. 2018-09-18T01:57:41Z) to Datetime
         /// </summary>
@@ -85,7 +88,7 @@ namespace ContentManager
         /// </summary>
         /// <param name="mapping">Variable dictionary from Post</param>
         /// <exception cref="FrontMatterMissingFieldsException">Thrown when required fields are missing</exception>
-        public static void FrontMatterContentSanityCheck (YamlMappingNode mapping)
+        public static void FrontMatterContentSanityCheck(YamlMappingNode mapping)
         {
             bool check(string fieldName) => !mapping.Children.ContainsKey(fieldName) || string.IsNullOrEmpty(mapping.Children[fieldName].ToString());
             var strings = new List<string> { "title", "slug" };

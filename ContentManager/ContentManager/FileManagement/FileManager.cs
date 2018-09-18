@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using Markdig;
 
-namespace ContentManager
+namespace ContentManager.FileManagement
 {
     
     /// <summary>
@@ -27,7 +27,7 @@ namespace ContentManager
                 .UseYamlFrontMatter()
                 .Build();
             var result = Markdig.Markdown.ToHtml(contents, pipeline);
-            var frontMatter = FrontMatter.GetFrontMatter(contents);
+            var frontMatter = FrontMatterManager.GetFrontMatter(contents);
 
 
 
