@@ -24,6 +24,7 @@ namespace ContentManager.FileManagement
         public DateTime? Updated { get; set; }
         public List<string> Tags { get; set; }
         public bool? IsDraft { get; set; }
+        public string Author { get; set; }
     }
 
     public class FrontMatterManager
@@ -91,8 +92,8 @@ namespace ContentManager.FileManagement
         public static void FrontMatterContentSanityCheck(YamlMappingNode mapping)
         {
             bool check(string fieldName) => !mapping.Children.ContainsKey(fieldName) || string.IsNullOrEmpty(mapping.Children[fieldName].ToString());
-            var strings = new List<string> { "title", "slug" };
-            foreach (var field in strings)
+            var REQUIRED_FIELDS = new List<string> { "title", "slug", "author" };
+            foreach (var field in REQUIRED_FIELDS)
             {
                 if (check(field))
                 {
@@ -132,6 +133,7 @@ namespace ContentManager.FileManagement
             {
                 Title = mapping.Children["title"].ToString(),
                 Slug = mapping.Children["slug"].ToString(),
+                Author = mapping.Children["author"].ToString(),
                 Published = publishedDate,
                 Updated = updatedDate,
                 Tags = tags,

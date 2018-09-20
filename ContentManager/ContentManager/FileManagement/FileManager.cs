@@ -22,17 +22,17 @@ namespace ContentManager.FileManagement
         public static string Blog (string file)
         {
             string contents = File.ReadAllText(file);
-            var pipeline = new MarkdownPipelineBuilder()
+            MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
                 .UseAdvancedExtensions()
                 .UseYamlFrontMatter()
                 .Build();
-            var result = Markdig.Markdown.ToHtml(contents, pipeline);
-            var frontMatter = FrontMatterManager.GetFrontMatter(contents);
-
-
-
-            var model = new BlogPost();
-            
+            string result = Markdown.ToHtml(contents, pipeline);
+            FrontMatter frontMatter = FrontMatterManager.GetFrontMatter(contents);
+            var model = new BlogPost
+            {
+                Headline = frontMatter.Title,
+                Id = frontMatter.Slug
+            };
             var o = JsonConvert.SerializeObject(model);
             return o;
         }

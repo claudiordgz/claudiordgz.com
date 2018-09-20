@@ -14,6 +14,7 @@ namespace ContentManager.Test
             string mockPost = @"---
 title: Docker Installation Notes
 slug: docker-installation-notes
+author: oreo
 draft: true
 ---
 <my-component>Some-data</my-component>
@@ -36,7 +37,7 @@ draft: true
 
         [Theory]
         [MemberData(nameof(GetFrontMatterMissingFieldsExceptionPosts))]
-        public void WillExplodeIfNoTitleOrSlug(string mockPost, string message)
+        public void WillExplodeIfFieldIsRequired(string mockPost, string message)
         {
             Exception ex = Assert.Throws<FrontMatterMissingFieldsException>(() => FrontMatterManager.GetFrontMatter(mockPost));
             Assert.Equal(message, ex.Message);
@@ -64,6 +65,7 @@ draft: true
         public static string mockDateTemplate = @"---
 title: Some Title
 slug: some-slug
+author: oreo
 date_published: {0}
 date_updated: {1}
 ---
@@ -131,6 +133,7 @@ date_updated: {1}
                     @"
 title: some-title
 slug: some-slug
+author: oreo
 ---
 <my-component>Some-data</my-component>
 ",
@@ -141,6 +144,7 @@ slug: some-slug
                     @"---
 title: some-title
 slug: some-slug
+author: oreo
 
 <my-component>Some-data</my-component>
 ",
@@ -190,7 +194,28 @@ title: some-title
 <my-component>Some-data</my-component>
 ",
                 "'slug' is mandatory"
-                }
+                },
+                new object[]
+                {
+                    @"---
+title: some-title
+slug: some-slug
+author:
+---
+<my-component>Some-data</my-component>
+",
+                "'author' is mandatory"
+                },
+                new object[]
+                {
+                    @"---
+title: some title
+slug: some-slug
+---
+<my-component>Some-data</my-component>
+",
+                "'author' is mandatory"
+                },
             };
         }
     }
