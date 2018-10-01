@@ -5,3 +5,9 @@ authors:
     web: https://www.claudiordgz.com
     twitter: claudiordgz
     github: claudiordgz
+# default thumbnails to be used
+# when no thumbnail was defined
+thumbnails:
+  - name: 'on thumbnail' 
+    path_to_file: 'path to file'
+	type: 't' 

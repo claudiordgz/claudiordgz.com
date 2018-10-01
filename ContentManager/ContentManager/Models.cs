@@ -4,6 +4,18 @@ using System.Text;
 
 namespace ContentManager.Models
 {
+    public class FrontMatter
+    {
+        public string Title { get; set; }
+        public string Slug { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime? PublishedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public List<string> Tags { get; set; }
+        public bool? IsDraft { get; set; }
+        public string Author { get; set; }
+    }
+
     public class Thumbnail
     {
         public string Id { get; set; }
@@ -39,6 +51,7 @@ namespace ContentManager.Models
         string CreationDate { get; set; }
         string UpdateDate { get; set; }
         List<string> Author { get; set; }
+        Status Status { get; set; }
     }
 
     public class BlogPost : ITease
@@ -52,8 +65,8 @@ namespace ContentManager.Models
         public string CreationDate { get; set; }
         public string UpdateDate { get; set; }
         public List<string> Author { get; set; }
-        public Status Status { get; set; }
         public List<string> Content { get; set; }
+        public Status Status { get; set; }
     }
 
     public class FeedPost : ITease
@@ -69,6 +82,7 @@ namespace ContentManager.Models
         public List<string> Author { get; set; }
         public string FeedId { get; set; }
         public List<string> Content { get; set; }
+        public Status Status { get; set; }
     }
 
     public class ProjectPost : ITease
@@ -83,8 +97,8 @@ namespace ContentManager.Models
         public string UpdateDate { get; set; }
         public List<string> Author { get; set; }
         public string ProjectId { get; set; }
-        public Status Status { get; set; }
         public List<string> Content { get; set; }
+        public Status Status { get; set; }
     }
 
     public class StudyPost : ITease
@@ -99,8 +113,8 @@ namespace ContentManager.Models
         public string UpdateDate { get; set; }
         public List<string> Author { get; set; }
         public string StudyId { get; set; }
-        public Status Status { get; set; }
         public List<string> Content { get; set; }
+        public Status Status { get; set; }
     }
 
     public class Feed : ITease
@@ -115,6 +129,7 @@ namespace ContentManager.Models
         public string UpdateDate { get; set; }
         public List<string> Author { get; set; }
         public string SourceUrl { get; set; }
+        public Status Status { get; set; }
     }
 
     public class Project : ITease
@@ -128,6 +143,7 @@ namespace ContentManager.Models
         public string CreationDate { get; set; }
         public string UpdateDate { get; set; }
         public List<string> Author { get; set; }
+        public Status Status { get; set; }
     }
 
     public class Study : ITease
@@ -141,5 +157,6 @@ namespace ContentManager.Models
         public string CreationDate { get; set; }
         public string UpdateDate { get; set; }
         public List<string> Author { get; set; }
+        public Status Status { get; set; }
     }
 }

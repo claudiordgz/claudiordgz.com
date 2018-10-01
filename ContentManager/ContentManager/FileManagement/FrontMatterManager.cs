@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ContentManager.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -16,19 +17,13 @@ namespace ContentManager.FileManagement
         public FrontMatterMissingFieldsException(string message) : base(message) { }
     }
 
-    public class FrontMatter
-    {
-        public string Title { get; set; }
-        public string Slug { get; set; }
-        public DateTime? Published { get; set; }
-        public DateTime? Updated { get; set; }
-        public List<string> Tags { get; set; }
-        public bool? IsDraft { get; set; }
-        public string Author { get; set; }
-    }
-
     public class FrontMatterManager
     {
+        /// DateTime Notes
+        /// Timezone should be passed in date
+        ///   - updated_date: 2014-12-05T01:10:29-05:00 (would parse to EST)
+        ///   - updated_date: 2014-12-05T01:10:29Z (would parse to UTC)
+
         /// <summary>
         /// Parse ISO 8601 String date (e.g. 2018-09-18T01:57:41Z) to Datetime
         /// </summary>
@@ -41,7 +36,7 @@ namespace ContentManager.FileManagement
             return DateTime.Parse(date, null, DateTimeStyles.RoundtripKind);
         }
 
-        public static string FromDateTimeString(DateTime date)
+        public static string FromDateTimeToISOString(DateTime date)
         {
             return date.ToString("yyyy-MM-ddTHH:mm:ssK");
         }
@@ -92,7 +87,7 @@ namespace ContentManager.FileManagement
         public static void FrontMatterContentSanityCheck(YamlMappingNode mapping)
         {
             bool check(string fieldName) => !mapping.Children.ContainsKey(fieldName) || string.IsNullOrEmpty(mapping.Children[fieldName].ToString());
-            var REQUIRED_FIELDS = new List<string> { "title", "slug", "author" };
+            var REQUIRED_FIELDS = new List<string> { "title", "slug", "author", "creation_date" };
             foreach (var field in REQUIRED_FIELDS)
             {
                 if (check(field))
@@ -134,8 +129,8 @@ namespace ContentManager.FileManagement
                 Title = mapping.Children["title"].ToString(),
                 Slug = mapping.Children["slug"].ToString(),
                 Author = mapping.Children["author"].ToString(),
-                Published = publishedDate,
-                Updated = updatedDate,
+                PublishedDate = publishedDate,
+                UpdatedDate = updatedDate,
                 Tags = tags,
                 IsDraft = isDraft
             };

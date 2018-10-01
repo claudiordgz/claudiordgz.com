@@ -19,6 +19,21 @@ namespace ContentManager.FileManagement
     {
         public Dictionary<Types.InputType, ITease> Model { get; set; } 
 
+        public static string GetSummaryFromContent(string content)
+        {
+            return "";
+        }
+
+        public static string GetThumbnailFromFrontMatterOrContent(FrontMatter frontMatter, string content)
+        {
+            return "";
+        }
+
+        public static string GetDefaultThumbnails()
+        {
+            return "";
+        }
+
         public static string Blog (string file)
         {
             string contents = File.ReadAllText(file);
@@ -31,7 +46,11 @@ namespace ContentManager.FileManagement
             var model = new BlogPost
             {
                 Headline = frontMatter.Title,
-                Id = frontMatter.Slug
+                Id = frontMatter.Slug,
+                Summary = "",
+                Tags = frontMatter.Tags,
+                CreationDate = FrontMatterManager.FromDateTimeToISOString(frontMatter.CreationDate),
+                UpdateDate = frontMatter.UpdatedDate.HasValue ? FrontMatterManager.FromDateTimeToISOString(frontMatter.UpdatedDate.Value) : ""
             };
             var o = JsonConvert.SerializeObject(model);
             return o;

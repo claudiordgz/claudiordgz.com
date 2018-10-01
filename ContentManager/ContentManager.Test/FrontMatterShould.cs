@@ -1,4 +1,5 @@
 ﻿using ContentManager.FileManagement;
+using ContentManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,11 +20,11 @@ draft: true
 ---
 <my-component>Some-data</my-component>
 ";
-            var frontMatter = FrontMatterManager.GetFrontMatter(mockPost);
+            FrontMatter frontMatter = FrontMatterManager.GetFrontMatter(mockPost);
             Assert.Equal("Docker Installation Notes", frontMatter.Title);
             Assert.Equal("docker-installation-notes", frontMatter.Slug);
-            Assert.Null(frontMatter.Published);
-            Assert.Null(frontMatter.Updated);
+            Assert.Null(frontMatter.PublishedDate);
+            Assert.Null(frontMatter.UpdatedDate);
             Assert.True(frontMatter.IsDraft);
         }
 
@@ -48,8 +49,8 @@ draft: true
         public void ParsesDateTimesAndIsDraftNull(string mockPost, string publishedDate, string updatedDate)
         {
             var frontMatter = FrontMatterManager.GetFrontMatter(mockPost);
-            string pbDate = FrontMatterManager.FromDateTimeString(frontMatter.Published.Value);
-            string upDate = FrontMatterManager.FromDateTimeString(frontMatter.Updated.Value);
+            string pbDate = FrontMatterManager.FromDateTimeToISOString(frontMatter.PublishedDate.Value);
+            string upDate = FrontMatterManager.FromDateTimeToISOString(frontMatter.UpdatedDate.Value);
             Assert.Equal(publishedDate, pbDate);
             Assert.Equal(updatedDate, upDate);
             Assert.Null(frontMatter.IsDraft);
