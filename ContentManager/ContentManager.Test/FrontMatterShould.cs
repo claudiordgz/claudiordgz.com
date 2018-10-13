@@ -17,14 +17,15 @@ title: Docker Installation Notes
 slug: docker-installation-notes
 author: oreo
 draft: true
+date_created: 2018-10-13T16:08:55+00:00
 ---
 <my-component>Some-data</my-component>
 ";
             FrontMatter frontMatter = FrontMatterManager.GetFrontMatter(mockPost);
             Assert.Equal("Docker Installation Notes", frontMatter.Title);
             Assert.Equal("docker-installation-notes", frontMatter.Slug);
-            Assert.Null(frontMatter.PublishedDate);
-            Assert.Null(frontMatter.UpdatedDate);
+            Assert.Null(frontMatter.Published);
+            Assert.Null(frontMatter.Updated);
             Assert.True(frontMatter.IsDraft);
         }
 
@@ -44,15 +45,24 @@ draft: true
             Assert.Equal(message, ex.Message);
         }
 
+        /// <summary>
+        /// Makes sure saved time and string time passed are the same. Time is saved in
+        /// UTC
+        /// </summary>
+        /// <param name="mockPost">The Mock Content with a Valid FrontMatter</param>
+        /// <param name="publishedDate">String with date_published</param>
+        /// <param name="updatedDate">String with date_updated</param>
         [Theory]
         [MemberData(nameof(GetDatesAndMockPost))]
         public void ParsesDateTimesAndIsDraftNull(string mockPost, string publishedDate, string updatedDate)
         {
             var frontMatter = FrontMatterManager.GetFrontMatter(mockPost);
-            string pbDate = FrontMatterManager.FromDateTimeToISOString(frontMatter.PublishedDate.Value);
-            string upDate = FrontMatterManager.FromDateTimeToISOString(frontMatter.UpdatedDate.Value);
-            Assert.Equal(publishedDate, pbDate);
-            Assert.Equal(updatedDate, upDate);
+            DateTime pbDate = frontMatter.Published.Value;
+            DateTime upDate = frontMatter.Updated.Value;
+            DateTime publishedDateTime = FrontMatterManager.FromISODateString(publishedDate);
+            DateTime updatedDateTime = FrontMatterManager.FromISODateString(updatedDate);
+            Assert.Equal(publishedDateTime.Ticks, pbDate.Ticks);
+            Assert.Equal(updatedDateTime.Ticks, upDate.Ticks);
             Assert.Null(frontMatter.IsDraft);
         }
 
@@ -67,6 +77,7 @@ draft: true
 title: Some Title
 slug: some-slug
 author: oreo
+date_created: 2018-10-13T16:08:55-05:00
 date_published: {0}
 date_updated: {1}
 ---
@@ -76,7 +87,7 @@ date_updated: {1}
         public static IEnumerable<object[]> GetDatesAndMockPost()
         {
             var t1PublishedDate = "1950-01-01T00:00:00Z";
-            var t1UpdateDate = "2014-12-05T01:10:29Z";
+            var t1UpdateDate = "2018-10-13T16:08:55-05:00";
             var builder = new StringBuilder();
 
             builder.AppendFormat(mockDateTemplate, t1PublishedDate, t1UpdateDate);
@@ -216,6 +227,29 @@ slug: some-slug
 <my-component>Some-data</my-component>
 ",
                 "'author' is mandatory"
+                },
+                new object[]
+                {
+                    @"---
+title: some title
+slug: some-slug
+author: some author
+---
+<my-component>Some-data</my-component>
+",
+                "'date_created' is mandatory"
+                },
+                new object[]
+                {
+                    @"---
+title: some title
+slug: some-slug
+author: some author
+date_created:
+---
+<my-component>Some-data</my-component>
+",
+                "'date_created' is mandatory"
                 },
             };
         }

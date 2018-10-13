@@ -49,8 +49,9 @@ namespace ContentManager.FileManagement
                 Id = frontMatter.Slug,
                 Summary = "",
                 Tags = frontMatter.Tags,
-                CreationDate = FrontMatterManager.FromDateTimeToISOString(frontMatter.CreationDate),
-                UpdateDate = frontMatter.UpdatedDate.HasValue ? FrontMatterManager.FromDateTimeToISOString(frontMatter.UpdatedDate.Value) : ""
+                DateCreated = FrontMatterManager.FromDateTimeToISOString(frontMatter.Created),
+                DateUpdated = frontMatter.Updated.HasValue ? FrontMatterManager.FromDateTimeToISOString(frontMatter.Updated.Value) : "",
+                DatePublished = frontMatter.Updated.HasValue ? FrontMatterManager.FromDateTimeToISOString(frontMatter.Published.Value) : ""
             };
             var o = JsonConvert.SerializeObject(model);
             return o;

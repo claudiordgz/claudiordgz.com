@@ -8,9 +8,9 @@ namespace ContentManager.Models
     {
         public string Title { get; set; }
         public string Slug { get; set; }
-        public DateTime CreationDate { get; set; }
-        public DateTime? PublishedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? Published { get; set; }
+        public DateTime? Updated { get; set; }
         public List<string> Tags { get; set; }
         public bool? IsDraft { get; set; }
         public string Author { get; set; }
@@ -19,7 +19,7 @@ namespace ContentManager.Models
     public class Thumbnail
     {
         public string Id { get; set; }
-        public string File { get; set; } // path to file in github, to move to cloudinary
+        public string File { get; set; } // path to file in github, to move to cloudinary?
         public string Type { get; set; } // so far image, video... audio maybe?
     }
 
@@ -48,8 +48,9 @@ namespace ContentManager.Models
         string Type { get; }
         Thumbnail Media { get; set; }
         List<string> Tags { get; set; }
-        string CreationDate { get; set; }
-        string UpdateDate { get; set; }
+        string DateCreated { get; set; }
+        string DateUpdated { get; set; }
+        string DatePublished { get; set; }
         List<string> Author { get; set; }
         Status Status { get; set; }
     }
@@ -62,8 +63,9 @@ namespace ContentManager.Models
         public string Type { get; } = "BlogPost";
         public Thumbnail Media { get; set; }
         public List<string> Tags { get; set; }
-        public string CreationDate { get; set; }
-        public string UpdateDate { get; set; }
+        public string DateCreated { get; set; }
+        public string DateUpdated { get; set; }
+        public string DatePublished { get; set; }
         public List<string> Author { get; set; }
         public List<string> Content { get; set; }
         public Status Status { get; set; }
@@ -77,8 +79,9 @@ namespace ContentManager.Models
         public string Type { get; } = "FeedPost";
         public Thumbnail Media { get; set; }
         public List<string> Tags { get; set; }
-        public string CreationDate { get; set; }
-        public string UpdateDate { get; set; }
+        public string DateCreated { get; set; }
+        public string DateUpdated { get; set; }
+        public string DatePublished { get; set; }
         public List<string> Author { get; set; }
         public string FeedId { get; set; }
         public List<string> Content { get; set; }
@@ -93,8 +96,9 @@ namespace ContentManager.Models
         public string Type { get; } = "ProjectPost";
         public Thumbnail Media { get; set; }
         public List<string> Tags { get; set; }
-        public string CreationDate { get; set; }
-        public string UpdateDate { get; set; }
+        public string DateCreated { get; set; }
+        public string DateUpdated { get; set; }
+        public string DatePublished { get; set; }
         public List<string> Author { get; set; }
         public string ProjectId { get; set; }
         public List<string> Content { get; set; }
@@ -109,8 +113,9 @@ namespace ContentManager.Models
         public string Type { get; } = "StudyPost";
         public Thumbnail Media { get; set; }
         public List<string> Tags { get; set; }
-        public string CreationDate { get; set; }
-        public string UpdateDate { get; set; }
+        public string DateCreated { get; set; }
+        public string DateUpdated { get; set; }
+        public string DatePublished { get; set; }
         public List<string> Author { get; set; }
         public string StudyId { get; set; }
         public List<string> Content { get; set; }
@@ -125,8 +130,9 @@ namespace ContentManager.Models
         public string Type { get; } = "Feed";
         public Thumbnail Media { get; set; }
         public List<string> Tags { get; set; }
-        public string CreationDate { get; set; }
-        public string UpdateDate { get; set; }
+        public string DateCreated { get; set; }
+        public string DateUpdated { get; set; }
+        public string DatePublished { get; set; }
         public List<string> Author { get; set; }
         public string SourceUrl { get; set; }
         public Status Status { get; set; }
@@ -140,8 +146,9 @@ namespace ContentManager.Models
         public string Type { get; } = "Project";
         public Thumbnail Media { get; set; }
         public List<string> Tags { get; set; }
-        public string CreationDate { get; set; }
-        public string UpdateDate { get; set; }
+        public string DateCreated { get; set; }
+        public string DateUpdated { get; set; }
+        public string DatePublished { get; set; }
         public List<string> Author { get; set; }
         public Status Status { get; set; }
     }
@@ -154,8 +161,9 @@ namespace ContentManager.Models
         public string Type { get; } = "Study";
         public Thumbnail Media { get; set; }
         public List<string> Tags { get; set; }
-        public string CreationDate { get; set; }
-        public string UpdateDate { get; set; }
+        public string DateCreated { get; set; }
+        public string DateUpdated { get; set; }
+        public string DatePublished { get; set; }
         public List<string> Author { get; set; }
         public Status Status { get; set; }
     }

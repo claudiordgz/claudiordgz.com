@@ -87,7 +87,7 @@ namespace ContentManager.FileManagement
         public static void FrontMatterContentSanityCheck(YamlMappingNode mapping)
         {
             bool check(string fieldName) => !mapping.Children.ContainsKey(fieldName) || string.IsNullOrEmpty(mapping.Children[fieldName].ToString());
-            var REQUIRED_FIELDS = new List<string> { "title", "slug", "author", "creation_date" };
+            var REQUIRED_FIELDS = new List<string> { "title", "slug", "author", "date_created" };
             foreach (var field in REQUIRED_FIELDS)
             {
                 if (check(field))
@@ -129,8 +129,8 @@ namespace ContentManager.FileManagement
                 Title = mapping.Children["title"].ToString(),
                 Slug = mapping.Children["slug"].ToString(),
                 Author = mapping.Children["author"].ToString(),
-                PublishedDate = publishedDate,
-                UpdatedDate = updatedDate,
+                Published = publishedDate,
+                Updated = updatedDate,
                 Tags = tags,
                 IsDraft = isDraft
             };
