@@ -98,7 +98,16 @@ namespace ContentManager.FileManagement
             }
         }
 
-        public static FrontMatter GetFrontMatter(string contents)
+        public static YamlMappingNode ConvertYaml(string frontMatterYaml)
+        {
+            var input = new StringReader(frontMatterYaml);
+            var yaml = new YamlStream();
+            yaml.Load(input);
+            YamlMappingNode mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
+            return mapping;
+        }
+
+        public static string GetFrontMatterFromText(string contents)
         {
             var frontMatterSeparator = "---" + GetNewLineSeparator(contents);
             if (!contents.StartsWith(frontMatterSeparator))
@@ -114,27 +123,43 @@ namespace ContentManager.FileManagement
             {
                 throw new FrontMatterFormatException("Where is the FrontMatter Ending? I need that too, ends with: ---\n");
             }
-            var frontMatterYaml = contents.Substring(pFromLength, pTo);
-            var input = new StringReader(frontMatterYaml);
-            var yaml = new YamlStream();
-            yaml.Load(input);
-            var mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
-            DateTime? publishedDate = GetDateTimeFieldFromMapping(mapping, "date_published");
-            DateTime? updatedDate = GetDateTimeFieldFromMapping(mapping, "date_updated");
-            FrontMatterContentSanityCheck(mapping);
-            var tags = mapping.Children.ContainsKey("tags") ? new List<string>(mapping.Children["tags"].ToString().Split(',')) : new List<string>();
-            var isDraft = GetFlag(mapping, "draft");
-            var frontMatter = new FrontMatter
+            return contents.Substring(pFromLength, pTo);
+        }
+
+        public static List<string> GetTags(YamlMappingNode mapping)
+        {
+            return mapping.Children.ContainsKey("tags") ?
+                new List<string>(mapping.Children["tags"].ToString().Split(','))
+                :
+                new List<string>();
+        }
+
+        public static FrontMatter SetupFrontMatter (YamlMappingNode mapping)
+        {
+            DateTime? published = GetDateTimeFieldFromMapping(mapping, "date_published");
+            DateTime? updated = GetDateTimeFieldFromMapping(mapping, "date_updated");
+            List<string> tags = GetTags(mapping);
+            bool? isDraft = GetFlag(mapping, "draft");
+            FrontMatter frontMatter = new FrontMatter
             {
                 Title = mapping.Children["title"].ToString(),
                 Slug = mapping.Children["slug"].ToString(),
                 Author = mapping.Children["author"].ToString(),
-                Published = publishedDate,
-                Updated = updatedDate,
+                Created = GetDateTimeFieldFromMapping(mapping, "date_created").Value,
+                Published = published,
+                Updated = updated,
                 Tags = tags,
                 IsDraft = isDraft
             };
             return frontMatter;
+        }
+
+        public static FrontMatter GetFrontMatter(string contents)
+        {
+            string frontMatterYaml = GetFrontMatterFromText(contents);
+            YamlMappingNode mapping = ConvertYaml(frontMatterYaml);
+            FrontMatterContentSanityCheck(mapping);
+            return SetupFrontMatter(mapping);
         }
     }
 
