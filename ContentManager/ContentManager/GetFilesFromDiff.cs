@@ -41,7 +41,7 @@ namespace ContentManager
             return Path.GetFullPath((new Uri(rPath)).LocalPath);
         }
 
-        public Dictionary<Types.InputType, IEnumerable<string>> packPaths (IEnumerable<string> changedPaths)
+        public Dictionary<Types.InputType, IEnumerable<string>> PackPaths (IEnumerable<string> changedPaths)
         {
             var blog = new List<string>();
             var feeds = new List<string>();
@@ -125,7 +125,7 @@ namespace ContentManager
                 _repo.Head.Tip.Tree
             );
             var changedPaths = FilterTreeChangesToPaths(changes);
-            return packPaths(changedPaths);
+            return PackPaths(changedPaths);
         }
 
     }

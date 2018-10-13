@@ -34,7 +34,7 @@ namespace ContentManager.Test
             var mockRepo = new Mock<IRepository>();
             var srcPath = GetSrc.SrcPath();
             var gitHelper = new GetFilesFromDiff(mockRepo.Object, srcPath);
-            var files = gitHelper.packPaths(mockChanges as IEnumerable<string>);
+            var files = gitHelper.PackPaths(mockChanges as IEnumerable<string>);
             Assert.Empty(files);
         }
 
@@ -45,7 +45,7 @@ namespace ContentManager.Test
             var mockRepo = new Mock<IRepository>();
             var srcPath = GetSrc.SrcPath();
             var gitHelper = new GetFilesFromDiff(mockRepo.Object, srcPath);
-            var files = gitHelper.packPaths(list as IEnumerable<string>);
+            var files = gitHelper.PackPaths(list as IEnumerable<string>);
             Assert.Single(files);
             foreach (var entry in files)
             {
