@@ -8,6 +8,27 @@ authors:
 # default thumbnails to be used
 # when no thumbnail was defined
 thumbnails:
-  - name: 'on thumbnail' 
-    path_to_file: 'path to file'
-	type: 't' 
+  -	name: gorkhs-pixabay-cat
+    path: pixabay/cat-1740777.svg
+    type: img
+  -	name: gorkhs-pixabay-head
+    path: pixabay/head-1971351.svg
+    type: img
+  -	name: gorkhs-pixabay-rabbit
+    path: pixabay/rabbit-2262101.svg
+    type: img
+  -	name: gorkhs-pixabay-dog
+    path: pixabay/dog-1728494.svg
+    type: img
+  -	name: gorkhs-pixabay-horse
+    path: pixabay/horse-1805300.svg
+    type: img
+  -	name: gorkhs-pixabay-sheep
+    path: pixabay/sheep-1990132.svg
+    type: img
+  -	name: gorkhs-pixabay-goat
+    path: pixabay/goat-1990181.svg
+    type: img
+  -	name: gorkhs-pixabay-logo
+    path: pixabay/logo-2930681_1920.png
+    type: img
