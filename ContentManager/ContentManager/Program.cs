@@ -10,6 +10,7 @@ namespace ContentManager
 
     class Program
     {
+        [ExcludeFromCodeCoverage]
         public static Options MapOptionsToResults (Configuration config, Options opts)
         {
             Enum.TryParse(opts.Input, out Types.InputType iType);
@@ -20,6 +21,8 @@ namespace ContentManager
             return opts;
         }
 
+        public static Func<IEnumerable<Error>, Options> notParsedFunc = _ => throw new Exception("failed parsing");
+
         [ExcludeFromCodeCoverage]
         static Configuration ParseArguments (string [] args)
         {
@@ -27,7 +30,7 @@ namespace ContentManager
             Configuration config = new Configuration(rootPath);
             Parser.Default.ParseArguments<Options>(args)
                 .MapResult(opts => MapOptionsToResults(config, opts),
-                _ => throw new Exception("failed parsing"));
+                notParsedFunc);
             return config;
         }
 

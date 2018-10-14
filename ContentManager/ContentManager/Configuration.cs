@@ -1,16 +1,20 @@
-﻿using System;
+﻿using ContentManager.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using YamlDotNet.RepresentationModel;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace ContentManager
 {
+
     public class Configuration
     {
         public Configuration(string rootPath)
         {
             RootPath = rootPath;
-            // ProcessConfigurationFile();
+            ProcessConfigurationFile();
         }
 
         public Types.InputType InputType { get; set; }
@@ -18,6 +22,7 @@ namespace ContentManager
         public bool Verbose { get; set; }
         public string RootPath { get; set; }
         public List<Types.InputType> TypesToProcess { get; set; }
+        public SiteDefaults Defaults { get; set; }
 
         public static string ConfigurationFileName => configurationFileName;
 
@@ -26,7 +31,7 @@ namespace ContentManager
             return Types.GetTypes(InputType);
         }
 
-        private const string configurationFileName = "configuration.yaml";
+        private const string configurationFileName = "configuration.yml";
         private readonly string[] configurationKeys = new string[] { "thumbnailDirectory", "authors", "credits", "thumbnails" };
 
         private void ProcessConfigurationFile ()
@@ -34,8 +39,12 @@ namespace ContentManager
             string contents = File.ReadAllText(Path.GetFullPath(Path.Combine(RootPath, configurationFileName)));
             YamlStream yaml = new YamlStream();
             var input = new StringReader(contents);
-            yaml.Load(input);
-            YamlMappingNode mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
+
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(new CamelCaseNamingConvention())
+                .Build();
+
+            Defaults = deserializer.Deserialize<SiteDefaults>(input);
         }
     }
 }

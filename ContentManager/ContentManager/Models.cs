@@ -4,6 +4,14 @@ using System.Text;
 
 namespace ContentManager.Models
 {
+    public class SiteDefaults
+    {
+        public string ThumbnailDirectory { get; set; }
+        public List<Author> Authors { get; set; }
+        public List<Author> Credits { get; set; }
+        public List<Thumbnail> Thumbnails { get; set; }
+    }
+
     public class FrontMatter
     {
         public string Title { get; set; }

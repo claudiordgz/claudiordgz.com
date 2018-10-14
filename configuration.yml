@@ -1,0 +1,39 @@
+thumbnailDirectory: defaultThumbnails
+authors:
+  - id: claudiordgz
+    name: Claudio Rodriguez
+    email: claudio.rdgz@gmail.com
+    website: https://www.claudiordgz.com
+    twitter: '@claudiordgz'
+    github: claudiordgz
+credits:
+  - id: gorkhs
+    name: Pujol Cristophe
+    twitter: '@gorkhs'
+# default thumbnails to be used
+# when no thumbnail was defined
+thumbnails:
+  - id: gorkhs-pixabay-cat
+    file: pixabay/gorkhs/cat-1740777.svg
+    type: img
+  - id: gorkhs-pixabay-head
+    file: pixabay/gorkhs/head-1971351.svg
+    type: img
+  - id: gorkhs-pixabay-rabbit
+    file: pixabay/gorkhs/rabbit-2262101.svg
+    type: img
+  - id: gorkhs-pixabay-dog
+    file: pixabay/gorkhs/dog-1728494.svg
+    type: img
+  - id: gorkhs-pixabay-horse
+    file: pixabay/gorkhs/horse-1805300.svg
+    type: img
+  - id: gorkhs-pixabay-sheep
+    file: pixabay/gorkhs/sheep-1990132.svg
+    type: img
+  - id: gorkhs-pixabay-goat
+    file: pixabay/gorkhs/goat-1990181.svg
+    type: img
+  - id: gorkhs-pixabay-logo
+    file: pixabay/gorkhs/logo-2930681_1920.png
+    type: img
