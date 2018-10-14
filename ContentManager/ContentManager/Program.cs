@@ -23,7 +23,8 @@ namespace ContentManager
         [ExcludeFromCodeCoverage]
         static Configuration ParseArguments (string [] args)
         {
-            var config = new Configuration();
+            string rootPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
+            Configuration config = new Configuration(rootPath);
             Parser.Default.ParseArguments<Options>(args)
                 .MapResult(opts => MapOptionsToResults(config, opts),
                 _ => throw new Exception("failed parsing"));
@@ -52,7 +53,6 @@ namespace ContentManager
         {
             var configuration = ParseArguments(args);
             configuration.TypesToProcess = configuration.GetTypes();
-            configuration.RootPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
             Func<Configuration, Dictionary<Types.InputType, IEnumerable<string>>> gitHelper = WrapGit;
             var files = GetFiles.FromBuildType(configuration, gitHelper);
         }
