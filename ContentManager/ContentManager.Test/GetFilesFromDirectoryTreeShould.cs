@@ -31,12 +31,11 @@ namespace ContentManager.Tests
         [Fact]
         public void ReturnsContentFromAllFoldersByConfiguration()
         {
-            var configuration = new Configuration
+            var configuration = new Configuration(GetSrc.SrcPath())
             {
                 InputType = Types.InputType.all,
                 BuildType = Types.BuildType.origin,
-                Verbose = false,
-                RootPath = GetSrc.SrcPath()
+                Verbose = false
             };
             configuration.TypesToProcess = configuration.GetTypes();
             var files = GetFilesFromDirectoryTree.GetAllFiles(configuration);
@@ -50,12 +49,11 @@ namespace ContentManager.Tests
         [InlineData(Types.InputType.study)]
         public void ReturnsContentSpecificFolderByConfiguration(Types.InputType type)
         {
-            var configuration = new Configuration()
+            var configuration = new Configuration(GetSrc.SrcPath())
             {
                 InputType = type,
                 BuildType = Types.BuildType.origin,
-                Verbose = false,
-                RootPath = GetSrc.SrcPath()
+                Verbose = false
             };
             configuration.TypesToProcess = configuration.GetTypes();
             var files = GetFilesFromDirectoryTree.GetAllFiles(configuration);

@@ -24,12 +24,11 @@ namespace ContentManager.Test
         [Fact]
         public void ReturnsContentFromAllFolders()
         {
-            var configuration = new Configuration
+            var configuration = new Configuration(GetSrc.SrcPath())
             {
                 InputType = Types.InputType.all,
                 BuildType = Types.BuildType.origin,
-                Verbose = false,
-                RootPath = GetSrc.SrcPath()
+                Verbose = false
             };
             configuration.TypesToProcess = configuration.GetTypes();
             Func<Configuration, Dictionary<Types.InputType, IEnumerable<string>>> gitHelper = MockWrapGit;
@@ -44,12 +43,11 @@ namespace ContentManager.Test
         [InlineData(Types.InputType.study)]
         public void ReturnsContentSpecificFolder(Types.InputType type)
         {
-            var configuration = new Configuration()
+            var configuration = new Configuration(GetSrc.SrcPath())
             {
                 InputType = type,
                 BuildType = Types.BuildType.origin,
-                Verbose = false,
-                RootPath = GetSrc.SrcPath()
+                Verbose = false
             };
             configuration.TypesToProcess = configuration.GetTypes();
             Func<Configuration, Dictionary<Types.InputType, IEnumerable<string>>> gitHelper = MockWrapGit;

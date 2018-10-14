@@ -10,7 +10,7 @@ namespace ContentManager
         public Configuration(string rootPath)
         {
             RootPath = rootPath;
-            ProcessConfigurationFile();
+            // ProcessConfigurationFile();
         }
 
         public Types.InputType InputType { get; set; }
