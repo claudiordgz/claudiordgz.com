@@ -25,7 +25,7 @@ namespace ContentManager.Test
         }
 
         [Fact]
-        public void CreditsMustBeDefinedCanBeEmpty()
+        public void CreditsMustBeDefinedy()
         {
             var rootPath = GetSrc.SrcPath();
             var configuration = new Configuration(rootPath);
@@ -33,7 +33,7 @@ namespace ContentManager.Test
         }
 
         [Fact]
-        public void ThumbnailsMustBeDefinedCanBeEmpty()
+        public void ThumbnailsMustBeDefined()
         {
             var rootPath = GetSrc.SrcPath();
             var configuration = new Configuration(rootPath);
