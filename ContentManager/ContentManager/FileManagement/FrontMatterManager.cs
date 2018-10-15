@@ -67,7 +67,7 @@ namespace ContentManager.FileManagement
             }
         }
 
-        public static bool? GetFlag(YamlMappingNode mapping, string name)
+        private static bool? GetFlag(YamlMappingNode mapping, string name)
         {
             if (mapping.Children.ContainsKey(name))
             {
@@ -84,7 +84,7 @@ namespace ContentManager.FileManagement
         /// </summary>
         /// <param name="mapping">Variable dictionary from Post</param>
         /// <exception cref="FrontMatterMissingFieldsException">Thrown when required fields are missing</exception>
-        public static void FrontMatterContentSanityCheck(YamlMappingNode mapping)
+        private static void FrontMatterContentSanityCheck(YamlMappingNode mapping)
         {
             bool check(string fieldName) => !mapping.Children.ContainsKey(fieldName) || string.IsNullOrEmpty(mapping.Children[fieldName].ToString());
             var REQUIRED_FIELDS = new List<string> { "title", "slug", "author", "date_created" };
@@ -98,7 +98,7 @@ namespace ContentManager.FileManagement
             }
         }
 
-        public static YamlMappingNode ConvertYaml(string frontMatterYaml)
+        private static YamlMappingNode ConvertYaml(string frontMatterYaml)
         {
             var input = new StringReader(frontMatterYaml);
             var yaml = new YamlStream();
@@ -107,7 +107,7 @@ namespace ContentManager.FileManagement
             return mapping;
         }
 
-        public static string GetFrontMatterFromText(string contents)
+        private static string GetFrontMatterFromText(string contents)
         {
             var frontMatterSeparator = "---" + GetNewLineSeparator(contents);
             if (!contents.StartsWith(frontMatterSeparator))
@@ -126,7 +126,7 @@ namespace ContentManager.FileManagement
             return contents.Substring(pFromLength, pTo);
         }
 
-        public static List<string> GetTags(YamlMappingNode mapping)
+        private static List<string> GetTags(YamlMappingNode mapping)
         {
             return mapping.Children.ContainsKey("tags") ?
                 new List<string>(mapping.Children["tags"].ToString().Split(','))
@@ -134,7 +134,7 @@ namespace ContentManager.FileManagement
                 new List<string>();
         }
 
-        public static FrontMatter SetupFrontMatter (YamlMappingNode mapping)
+        private static FrontMatter SetupFrontMatter (YamlMappingNode mapping)
         {
             DateTime? published = GetDateTimeFieldFromMapping(mapping, "date_published");
             DateTime? updated = GetDateTimeFieldFromMapping(mapping, "date_updated");

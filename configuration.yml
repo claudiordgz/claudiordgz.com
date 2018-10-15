@@ -1,4 +1,4 @@
-thumbnailDirectory: defaultThumbnails
+thumbnailDirectory: assets
 authors:
   - id: claudiordgz
     name: Claudio Rodriguez
@@ -15,25 +15,28 @@ credits:
 thumbnails:
   - id: gorkhs-pixabay-cat
     file: pixabay/gorkhs/cat-1740777.svg
-    type: img
+    type: svg
   - id: gorkhs-pixabay-head
     file: pixabay/gorkhs/head-1971351.svg
-    type: img
+    type: svg
   - id: gorkhs-pixabay-rabbit
     file: pixabay/gorkhs/rabbit-2262101.svg
-    type: img
+    type: svg
   - id: gorkhs-pixabay-dog
     file: pixabay/gorkhs/dog-1728494.svg
-    type: img
+    type: svg
   - id: gorkhs-pixabay-horse
     file: pixabay/gorkhs/horse-1805300.svg
-    type: img
+    type: svg
   - id: gorkhs-pixabay-sheep
     file: pixabay/gorkhs/sheep-1990132.svg
-    type: img
+    type: svg
   - id: gorkhs-pixabay-goat
     file: pixabay/gorkhs/goat-1990181.svg
-    type: img
+    type: svg
   - id: gorkhs-pixabay-logo
     file: pixabay/gorkhs/logo-2930681_1920.png
+    type: img
+  - id: cocoparisienne-cat
+    file: pixabay/cocoparisienne/cat-1285634_1920.png
     type: img
