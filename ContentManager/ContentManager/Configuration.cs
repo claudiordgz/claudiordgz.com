@@ -1,4 +1,5 @@
 ﻿using ContentManager.Models;
+using ContentManager.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,12 +16,14 @@ namespace ContentManager
         {
             RootPath = rootPath;
             ProcessConfigurationFile();
+            GithubProperties = Git.GetCurrentGithubProperties(rootPath);
         }
 
         public Types.InputType InputType { get; set; }
         public Types.BuildType BuildType { get; set; }
         public bool Verbose { get; set; }
         public string RootPath { get; set; }
+        public RepositorySettings GithubProperties { get; set; }
         public List<Types.InputType> TypesToProcess { get; set; }
         public SiteDefaults Defaults { get; set; }
 
@@ -38,9 +41,9 @@ namespace ContentManager
         {
             string contents = File.ReadAllText(Path.GetFullPath(Path.Combine(RootPath, configurationFileName)));
             YamlStream yaml = new YamlStream();
-            var input = new StringReader(contents);
+            StringReader input = new StringReader(contents);
 
-            var deserializer = new DeserializerBuilder()
+            Deserializer deserializer = new DeserializerBuilder()
                 .WithNamingConvention(new CamelCaseNamingConvention())
                 .Build();
 
