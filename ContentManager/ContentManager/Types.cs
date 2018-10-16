@@ -25,7 +25,7 @@ namespace ContentManager
         {
             if (iType == InputType.all)
             {
-                var mTypes = new List<InputType>
+                List<InputType> mTypes = new List<InputType>
                 {
                     InputType.blog,
                     InputType.feeds,
@@ -36,7 +36,7 @@ namespace ContentManager
             }
             else
             {
-                var mTypes = new List<InputType>{ iType };
+                List<InputType> mTypes = new List<InputType>{ iType };
                 return mTypes;
             }
         }

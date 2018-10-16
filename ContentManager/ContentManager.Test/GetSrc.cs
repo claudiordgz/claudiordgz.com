@@ -7,8 +7,8 @@ namespace ContentManager.Test
     {
         public static string SrcPath()
         {
-            var binPath = Directory.GetCurrentDirectory();
-            var rPath = Path.Combine(binPath, "../../../../..");
+            string binPath = Directory.GetCurrentDirectory();
+            string rPath = Path.Combine(binPath, "../../../../..");
             return Path.GetFullPath((new Uri(rPath)).LocalPath);
         }
     }

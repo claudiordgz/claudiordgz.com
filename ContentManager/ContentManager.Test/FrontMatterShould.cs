@@ -56,7 +56,7 @@ date_created: 2018-10-13T16:08:55+00:00
         [MemberData(nameof(GetDatesAndMockPost))]
         public void ParsesDateTimesAndIsDraftNull(string mockPost, string publishedDate, string updatedDate)
         {
-            var frontMatter = FrontMatterManager.GetFrontMatter(mockPost);
+            FrontMatter frontMatter = FrontMatterManager.GetFrontMatter(mockPost);
             DateTime pbDate = frontMatter.Published.Value;
             DateTime upDate = frontMatter.Updated.Value;
             DateTime publishedDateTime = FrontMatterManager.FromISODateString(publishedDate);
@@ -86,15 +86,15 @@ date_updated: {1}
 
         public static IEnumerable<object[]> GetDatesAndMockPost()
         {
-            var t1PublishedDate = "1950-01-01T00:00:00Z";
-            var t1UpdateDate = "2018-10-13T16:08:55-05:00";
-            var builder = new StringBuilder();
+            string t1PublishedDate = "1950-01-01T00:00:00Z";
+            string t1UpdateDate = "2018-10-13T16:08:55-05:00";
+            StringBuilder builder = new StringBuilder();
 
             builder.AppendFormat(mockDateTemplate, t1PublishedDate, t1UpdateDate);
-            var t1MockPost = builder.ToString();
+            string t1MockPost = builder.ToString();
             builder.Clear();
 
-            var allData = new List<object[]>
+            List<object[]> allData = new List<object[]>
             {
                 new object[]
                 {
@@ -108,25 +108,25 @@ date_updated: {1}
 
         public static IEnumerable<object[]> GetDatesExceptions()
         {
-            var builder = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
 
             builder.AppendFormat(mockDateTemplate, "lsdfkj", ";sadfl");
-            var t1MockPost = builder.ToString();
+            string t1MockPost = builder.ToString();
             builder.Clear();
 
             builder.AppendFormat(mockDateTemplate, "1950-01-01T00:00:00Z", ";sadfl");
-            var t2MockPost = builder.ToString();
+            string t2MockPost = builder.ToString();
             builder.Clear();
 
             builder.AppendFormat(mockDateTemplate, "lsdfkj", "1950-01-01T00:00:00Z");
-            var t3MockPost = builder.ToString();
+            string t3MockPost = builder.ToString();
             builder.Clear();
 
             builder.AppendFormat(mockDateTemplate, "", "");
-            var t4MockPost = builder.ToString();
+            string t4MockPost = builder.ToString();
             builder.Clear();
 
-            var allData = new List<object[]>
+            List<object[]> allData = new List<object[]>
             {
                 new object[] { t1MockPost },
                 new object[] { t2MockPost },

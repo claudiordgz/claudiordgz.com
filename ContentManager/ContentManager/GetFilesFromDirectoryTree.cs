@@ -37,7 +37,7 @@ namespace ContentManager
         {
             foreach (string f in Directory.GetFiles(path, "*"))
             {
-                var extension = Path.GetExtension(f);
+                string extension = Path.GetExtension(f);
                 if (extension.Contains("xml") || extension.Contains("opml"))
                 {
                     yield return f;
@@ -69,7 +69,7 @@ namespace ContentManager
 
         private static Dictionary<Types.InputType, Func<string, IEnumerable<string>>> TypeToImplementationDict()
         {
-            var config = new Dictionary<Types.InputType, Func<string, IEnumerable<string>>>
+            Dictionary<Types.InputType, Func<string, IEnumerable<string>>> config = new Dictionary<Types.InputType, Func<string, IEnumerable<string>>>
             {
                 { Types.InputType.blog, Blog },
                 { Types.InputType.feeds, Feeds },
@@ -81,13 +81,13 @@ namespace ContentManager
 
         public static Dictionary<Types.InputType, IEnumerable<string>> GetAllFiles(List<Types.InputType> types, string pathToSrc)
         {
-            var paths = new Dictionary<Types.InputType, IEnumerable<string>>();
-            var configuration = TypeToImplementationDict();
-            foreach (var entry in types)
+            Dictionary<Types.InputType, IEnumerable<string>> paths = new Dictionary<Types.InputType, IEnumerable<string>>();
+            Dictionary<Types.InputType, Func<string, IEnumerable<string>>> configuration = TypeToImplementationDict();
+            foreach (Types.InputType entry in types)
             {
-                var pathToPosts = Path.Combine(pathToSrc, entry.ToString("G"));
-                var impl = configuration[entry];
-                var generator = impl(pathToPosts);
+                string pathToPosts = Path.Combine(pathToSrc, entry.ToString("G"));
+                Func<string, IEnumerable<string>> impl = configuration[entry];
+                IEnumerable<string> generator = impl(pathToPosts);
                 paths.Add(entry, generator);
             }
             return paths;

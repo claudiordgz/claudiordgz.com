@@ -43,7 +43,7 @@ namespace ContentManager.FileManagement
                 .Build();
             string result = Markdown.ToHtml(contents, pipeline);
             FrontMatter frontMatter = FrontMatterManager.GetFrontMatter(contents);
-            var model = new BlogPost
+            BlogPost model = new BlogPost
             {
                 Headline = frontMatter.Title,
                 Id = frontMatter.Slug,
@@ -53,15 +53,15 @@ namespace ContentManager.FileManagement
                 DateUpdated = frontMatter.Updated.HasValue ? FrontMatterManager.FromDateTimeToISOString(frontMatter.Updated.Value) : "",
                 DatePublished = frontMatter.Updated.HasValue ? FrontMatterManager.FromDateTimeToISOString(frontMatter.Published.Value) : ""
             };
-            var o = JsonConvert.SerializeObject(model);
+            string o = JsonConvert.SerializeObject(model);
             return o;
         }
 
         public static string Feeds (string file)
         {
-            var pieces = file.Split(Path.DirectorySeparatorChar);
-            var model = new Feed();
-            var o = JsonConvert.SerializeObject(model);
+            string[] pieces = file.Split(Path.DirectorySeparatorChar);
+            Feed model = new Feed();
+            string o = JsonConvert.SerializeObject(model);
             return o;
         }
 
@@ -73,9 +73,9 @@ namespace ContentManager.FileManagement
         /// <returns></returns>
         public static string Projects (string file)
         {
-            var pieces = file.Split(Path.DirectorySeparatorChar);
-            var model = new Project();
-            var o = JsonConvert.SerializeObject(model);
+            string[] pieces = file.Split(Path.DirectorySeparatorChar);
+            Project model = new Project();
+            string o = JsonConvert.SerializeObject(model);
             return o;
         }
 
@@ -87,15 +87,15 @@ namespace ContentManager.FileManagement
         /// <returns></returns>
         public static string Study (string file)
         {
-            var pieces = file.Split(Path.DirectorySeparatorChar);
-            var model = new Study();
-            var o = JsonConvert.SerializeObject(model);
+            string[] pieces = file.Split(Path.DirectorySeparatorChar);
+            Study model = new Study();
+            string o = JsonConvert.SerializeObject(model);
             return o;
         }
 
         public static Dictionary<Types.InputType, Func<string, string>> TypeToImplementationDict()
         {
-            var config = new Dictionary<Types.InputType, Func<string, string>>
+            Dictionary<Types.InputType, Func<string, string>> config = new Dictionary<Types.InputType, Func<string, string>>
             {
                 { Types.InputType.blog, Blog },
                 { Types.InputType.feeds, Feeds },
@@ -107,18 +107,18 @@ namespace ContentManager.FileManagement
 
         public void ProcessFileDictionary (Dictionary<Types.InputType, IEnumerable<string>> files)
         {
-            var configuration = TypeToImplementationDict();
-            foreach (var section in files)
+            Dictionary<Types.InputType, Func<string, string>> configuration = TypeToImplementationDict();
+            foreach (KeyValuePair<Types.InputType, IEnumerable<string>> section in files)
             {
-                var implementation = configuration[section.Key];
-                foreach (var file in section.Value)
+                Func<string, string> implementation = configuration[section.Key];
+                foreach (string file in section.Value)
                 {
                     // translate file into model object
                     //   - read file
                     //   - translate yaml frontmatter
                     //   - translate markdown content
                     //   - Assemble Model object
-                    var model = implementation(file);
+                    string model = implementation(file);
                 }
             }
         }

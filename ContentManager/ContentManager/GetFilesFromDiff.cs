@@ -20,7 +20,7 @@ namespace ContentManager
 
         internal static bool ShouldDiscardPath(string path)
         {
-            var ext = Path.GetExtension(path);
+            string ext = Path.GetExtension(path);
             if (string.IsNullOrEmpty(ext))
             {
                 return true;
@@ -37,18 +37,18 @@ namespace ContentManager
 
         internal static string CombinePaths(string srcPath, string path)
         {
-            var rPath = Path.Combine(srcPath, path);
+            string rPath = Path.Combine(srcPath, path);
             return Path.GetFullPath((new Uri(rPath)).LocalPath);
         }
 
         public Dictionary<Types.InputType, IEnumerable<string>> PackPaths (IEnumerable<string> changedPaths)
         {
-            var blog = new List<string>();
-            var feeds = new List<string>();
-            var projects = new List<string>();
-            var study = new List<string>();
-            var paths = new Dictionary<Types.InputType, IEnumerable<string>>();
-            foreach (var p in changedPaths)
+            List<string> blog = new List<string>();
+            List<string> feeds = new List<string>();
+            List<string> projects = new List<string>();
+            List<string> study = new List<string>();
+            Dictionary<Types.InputType, IEnumerable<string>> paths = new Dictionary<Types.InputType, IEnumerable<string>>();
+            foreach (string p in changedPaths)
             {
                 if (p.StartsWith(Types.InputType.blog.ToString("G")))
                 {
@@ -58,7 +58,7 @@ namespace ContentManager
                     }
                     if (!ShouldDiscardPath(p))
                     {
-                        var nP = CombinePaths(_pathToSrc, p);
+                        string nP = CombinePaths(_pathToSrc, p);
                         blog.Add(nP);
                     }
                 }
@@ -68,10 +68,10 @@ namespace ContentManager
                     {
                         paths[Types.InputType.feeds] = feeds;
                     }
-                    var extension = Path.GetExtension(p);
+                    string extension = Path.GetExtension(p);
                     if (extension.Contains("xml") || extension.Contains("opml"))
                     {
-                        var nP = CombinePaths(_pathToSrc, p);
+                        string nP = CombinePaths(_pathToSrc, p);
                         feeds.Add(nP);
                     }
                 }
@@ -83,7 +83,7 @@ namespace ContentManager
                     }
                     if (!ShouldDiscardPath(p))
                     {
-                        var nP = CombinePaths(_pathToSrc, p);
+                        string nP = CombinePaths(_pathToSrc, p);
                         projects.Add(nP);
                     }
                 }
@@ -95,7 +95,7 @@ namespace ContentManager
                     }
                     if (!ShouldDiscardPath(p))
                     {
-                        var nP = CombinePaths(_pathToSrc, p);
+                        string nP = CombinePaths(_pathToSrc, p);
                         study.Add(nP);
                     }
 
@@ -124,7 +124,7 @@ namespace ContentManager
                 commitFromLastTag.Tree,
                 _repo.Head.Tip.Tree
             );
-            var changedPaths = FilterTreeChangesToPaths(changes);
+            IEnumerable<string> changedPaths = FilterTreeChangesToPaths(changes);
             return PackPaths(changedPaths);
         }
 

@@ -9,8 +9,8 @@ namespace ContentManager.Test
     {
         public static void MarkDownOrXmlFiles(string file)
         {
-            var ext = Path.GetExtension(file);
-            var condition = ext.Contains("opml") || ext.Contains("xml") || ext.Contains("md");
+            string ext = Path.GetExtension(file);
+            bool condition = ext.Contains("opml") || ext.Contains("xml") || ext.Contains("md");
             Assert.True(condition);
         }
 
@@ -18,10 +18,10 @@ namespace ContentManager.Test
         {
             // blog, feeds, study, projects
             Assert.Equal(4, files.Count);
-            foreach (var entry in files)
+            foreach (KeyValuePair<Types.InputType, IEnumerable<string>> entry in files)
             {
-                var type = entry.Key;
-                foreach (var file in entry.Value)
+                Types.InputType type = entry.Key;
+                foreach (string file in entry.Value)
                 {
                     MarkDownOrXmlFiles(file);
                     Assert.Contains(type.ToString("g"), file);
@@ -33,10 +33,10 @@ namespace ContentManager.Test
         {
             // blog, feeds, study, projects
             Assert.Single(files);
-            foreach (var entry in files)
+            foreach (KeyValuePair<Types.InputType, IEnumerable<string>> entry in files)
             {
                 Assert.Equal(type, entry.Key);
-                foreach (var file in entry.Value)
+                foreach (string file in entry.Value)
                 {
                     MarkDownOrXmlFiles(file);
                     Assert.Contains(type.ToString("g"), file);

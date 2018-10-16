@@ -49,8 +49,8 @@ namespace ContentManager.FileManagement
         /// <returns>newline specific for system</returns>
         public static string GetNewLineSeparator(string contents)
         {
-            var contentsPiece = contents.Substring(0, 6);
-            var newLine = contentsPiece.Contains("\r\n") ?
+            string contentsPiece = contents.Substring(0, 6);
+            string newLine = contentsPiece.Contains("\r\n") ?
                 "\r\n" : "\n";
             return newLine;
         }
@@ -87,12 +87,12 @@ namespace ContentManager.FileManagement
         private static void FrontMatterContentSanityCheck(YamlMappingNode mapping)
         {
             bool check(string fieldName) => !mapping.Children.ContainsKey(fieldName) || string.IsNullOrEmpty(mapping.Children[fieldName].ToString());
-            var REQUIRED_FIELDS = new List<string> { "title", "slug", "author", "date_created" };
-            foreach (var field in REQUIRED_FIELDS)
+            List<string> REQUIRED_FIELDS = new List<string> { "title", "slug", "author", "date_created" };
+            foreach (string field in REQUIRED_FIELDS)
             {
                 if (check(field))
                 {
-                    var msg = string.Format("'{0}' is mandatory", field);
+                    string msg = string.Format("'{0}' is mandatory", field);
                     throw new FrontMatterMissingFieldsException(msg);
                 }
             }
@@ -100,8 +100,8 @@ namespace ContentManager.FileManagement
 
         private static YamlMappingNode ConvertYaml(string frontMatterYaml)
         {
-            var input = new StringReader(frontMatterYaml);
-            var yaml = new YamlStream();
+            StringReader input = new StringReader(frontMatterYaml);
+            YamlStream yaml = new YamlStream();
             yaml.Load(input);
             YamlMappingNode mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
             return mapping;
@@ -109,7 +109,7 @@ namespace ContentManager.FileManagement
 
         private static string GetFrontMatterFromText(string contents)
         {
-            var frontMatterSeparator = "---" + GetNewLineSeparator(contents);
+            string frontMatterSeparator = "---" + GetNewLineSeparator(contents);
             if (!contents.StartsWith(frontMatterSeparator))
             {
                 throw new FrontMatterFormatException("Where is the FrontMatter? I need it, starts with: ---\n");

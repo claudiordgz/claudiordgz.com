@@ -13,12 +13,12 @@ namespace ContentManager.Test
         [Fact(Skip ="For now")]
         public void ReturnTheModelAsAString()
         {
-            var configuration = FileManager.TypeToImplementationDict();
-            var srcPath = GetSrc.SrcPath();
-            var combinedPath = Path.Combine(srcPath, "blog");
+            Dictionary<Types.InputType, Func<string, string>> configuration = FileManager.TypeToImplementationDict();
+            string srcPath = GetSrc.SrcPath();
+            string combinedPath = Path.Combine(srcPath, "blog");
             combinedPath = Path.Combine(combinedPath, "posts");
             combinedPath = Path.Combine(combinedPath, "the-mothfng-facebook-feed-dialog.md");
-            var implementation = configuration[Types.InputType.blog];
+            Func<string, string> implementation = configuration[Types.InputType.blog];
             string model = implementation(combinedPath);
         }
 

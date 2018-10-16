@@ -9,11 +9,11 @@ namespace ContentManager.Test
 
         internal static Dictionary<Types.InputType, IEnumerable<string>> MockWrapGit(Configuration configuration)
         {
-            var blog = new List<string>();
-            var feeds = new List<string>();
-            var projects = new List<string>();
-            var study = new List<string>();
-            var paths = new Dictionary<Types.InputType, IEnumerable<string>>();
+            List<string> blog = new List<string>();
+            List<string> feeds = new List<string>();
+            List<string> projects = new List<string>();
+            List<string> study = new List<string>();
+            Dictionary<Types.InputType, IEnumerable<string>> paths = new Dictionary<Types.InputType, IEnumerable<string>>();
             paths[Types.InputType.blog] = blog;
             paths[Types.InputType.feeds] = feeds;
             paths[Types.InputType.projects] = projects;
@@ -24,7 +24,7 @@ namespace ContentManager.Test
         [Fact]
         public void ReturnsContentFromAllFolders()
         {
-            var configuration = new Configuration(GetSrc.SrcPath())
+            Configuration configuration = new Configuration(GetSrc.SrcPath())
             {
                 InputType = Types.InputType.all,
                 BuildType = Types.BuildType.origin,
@@ -32,7 +32,7 @@ namespace ContentManager.Test
             };
             configuration.TypesToProcess = configuration.GetTypes();
             Func<Configuration, Dictionary<Types.InputType, IEnumerable<string>>> gitHelper = MockWrapGit;
-            var files = GetFiles.FromBuildType(configuration, gitHelper);
+            Dictionary<Types.InputType, IEnumerable<string>> files = GetFiles.FromBuildType(configuration, gitHelper);
             AnallyExpect.MarkdownXmlOrOpmlFilesOnAll(files);
         }
 
@@ -43,7 +43,7 @@ namespace ContentManager.Test
         [InlineData(Types.InputType.study)]
         public void ReturnsContentSpecificFolder(Types.InputType type)
         {
-            var configuration = new Configuration(GetSrc.SrcPath())
+            Configuration configuration = new Configuration(GetSrc.SrcPath())
             {
                 InputType = type,
                 BuildType = Types.BuildType.origin,
@@ -51,7 +51,7 @@ namespace ContentManager.Test
             };
             configuration.TypesToProcess = configuration.GetTypes();
             Func<Configuration, Dictionary<Types.InputType, IEnumerable<string>>> gitHelper = MockWrapGit;
-            var files = GetFiles.FromBuildType(configuration, gitHelper);
+            Dictionary<Types.InputType, IEnumerable<string>> files = GetFiles.FromBuildType(configuration, gitHelper);
             AnallyExpect.MarkdownXmlOrOpmlFilesOnSingleType(type, files);
         }
     }

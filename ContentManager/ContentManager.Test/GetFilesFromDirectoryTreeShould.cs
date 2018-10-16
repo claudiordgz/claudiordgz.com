@@ -9,9 +9,9 @@ namespace ContentManager.Tests
         [Fact]
         public void ReturnsContentFromAllFoldersByTypesAndSrcPath()
         {
-            var srcPath = GetSrc.SrcPath();
-            var types = Types.GetTypes(Types.InputType.all);
-            var files = GetFilesFromDirectoryTree.GetAllFiles(types, srcPath);
+            string srcPath = GetSrc.SrcPath();
+            System.Collections.Generic.List<Types.InputType> types = Types.GetTypes(Types.InputType.all);
+            System.Collections.Generic.Dictionary<Types.InputType, System.Collections.Generic.IEnumerable<string>> files = GetFilesFromDirectoryTree.GetAllFiles(types, srcPath);
             AnallyExpect.MarkdownXmlOrOpmlFilesOnAll(files);
         }
 
@@ -22,23 +22,23 @@ namespace ContentManager.Tests
         [InlineData(Types.InputType.study)]
         public void ReturnsContentSpecificFolderByTypesAndSrcPath(Types.InputType type)
         {
-            var srcPath = GetSrc.SrcPath();
-            var types = Types.GetTypes(type);
-            var files = GetFilesFromDirectoryTree.GetAllFiles(types, srcPath);
+            string srcPath = GetSrc.SrcPath();
+            System.Collections.Generic.List<Types.InputType> types = Types.GetTypes(type);
+            System.Collections.Generic.Dictionary<Types.InputType, System.Collections.Generic.IEnumerable<string>> files = GetFilesFromDirectoryTree.GetAllFiles(types, srcPath);
             AnallyExpect.MarkdownXmlOrOpmlFilesOnSingleType(type, files);
         }
 
         [Fact]
         public void ReturnsContentFromAllFoldersByConfiguration()
         {
-            var configuration = new Configuration(GetSrc.SrcPath())
+            Configuration configuration = new Configuration(GetSrc.SrcPath())
             {
                 InputType = Types.InputType.all,
                 BuildType = Types.BuildType.origin,
                 Verbose = false
             };
             configuration.TypesToProcess = configuration.GetTypes();
-            var files = GetFilesFromDirectoryTree.GetAllFiles(configuration);
+            System.Collections.Generic.Dictionary<Types.InputType, System.Collections.Generic.IEnumerable<string>> files = GetFilesFromDirectoryTree.GetAllFiles(configuration);
             AnallyExpect.MarkdownXmlOrOpmlFilesOnAll(files);
         }
 
@@ -49,14 +49,14 @@ namespace ContentManager.Tests
         [InlineData(Types.InputType.study)]
         public void ReturnsContentSpecificFolderByConfiguration(Types.InputType type)
         {
-            var configuration = new Configuration(GetSrc.SrcPath())
+            Configuration configuration = new Configuration(GetSrc.SrcPath())
             {
                 InputType = type,
                 BuildType = Types.BuildType.origin,
                 Verbose = false
             };
             configuration.TypesToProcess = configuration.GetTypes();
-            var files = GetFilesFromDirectoryTree.GetAllFiles(configuration);
+            System.Collections.Generic.Dictionary<Types.InputType, System.Collections.Generic.IEnumerable<string>> files = GetFilesFromDirectoryTree.GetAllFiles(configuration);
             AnallyExpect.MarkdownXmlOrOpmlFilesOnSingleType(type, files);
         }
     }

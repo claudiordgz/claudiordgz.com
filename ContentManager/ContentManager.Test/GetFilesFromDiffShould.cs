@@ -12,7 +12,7 @@ namespace ContentManager.Test
         [Fact]
         public void IgnoresNonContentDirectories()
         {
-            var mockChanges = new List<string>()
+            List<string> mockChanges = new List<string>()
             {
                 ".gitignore",
                 ".vsts-content-manager.yml",
@@ -31,10 +31,10 @@ namespace ContentManager.Test
                 "ContentManager/README.md"
             };
 
-            var mockRepo = new Mock<IRepository>();
-            var srcPath = GetSrc.SrcPath();
-            var gitHelper = new GetFilesFromDiff(mockRepo.Object, srcPath);
-            var files = gitHelper.PackPaths(mockChanges as IEnumerable<string>);
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            string srcPath = GetSrc.SrcPath();
+            GetFilesFromDiff gitHelper = new GetFilesFromDiff(mockRepo.Object, srcPath);
+            Dictionary<Types.InputType, IEnumerable<string>> files = gitHelper.PackPaths(mockChanges as IEnumerable<string>);
             Assert.Empty(files);
         }
 
@@ -42,16 +42,16 @@ namespace ContentManager.Test
         [MemberData(nameof(GetData))]
         public void ReturnsContentSpecificFolder(Types.InputType type, IEnumerable<string> list, int fileCount)
         {
-            var mockRepo = new Mock<IRepository>();
-            var srcPath = GetSrc.SrcPath();
-            var gitHelper = new GetFilesFromDiff(mockRepo.Object, srcPath);
-            var files = gitHelper.PackPaths(list as IEnumerable<string>);
+            Mock<IRepository> mockRepo = new Mock<IRepository>();
+            string srcPath = GetSrc.SrcPath();
+            GetFilesFromDiff gitHelper = new GetFilesFromDiff(mockRepo.Object, srcPath);
+            Dictionary<Types.InputType, IEnumerable<string>> files = gitHelper.PackPaths(list as IEnumerable<string>);
             Assert.Single(files);
-            foreach (var entry in files)
+            foreach (KeyValuePair<Types.InputType, IEnumerable<string>> entry in files)
             {
                 Assert.Equal(type, entry.Key);
                 Assert.Equal(fileCount, entry.Value.Count());
-                foreach (var file in entry.Value)
+                foreach (string file in entry.Value)
                 {
                     AnallyExpect.MarkDownOrXmlFiles(file);
                     Assert.Contains(type.ToString("g"), file);
@@ -61,7 +61,7 @@ namespace ContentManager.Test
 
         public static IEnumerable<object[]> GetData()
         {
-            var blogChanges = new List<string>()
+            List<string> blogChanges = new List<string>()
             {
                 ".gitignore",
                 ".vsts-content-manager.yml",
@@ -72,7 +72,7 @@ namespace ContentManager.Test
                 "blog/posts/abstract-factory-cpp.md",
                 "blog/posts/ad-generator-thoughts-after-first-commit.md"
             };
-            var feedChanges = new List<string>()
+            List<string> feedChanges = new List<string>()
             {
                 ".gitignore",
                 ".vsts-content-manager.yml",
@@ -80,7 +80,7 @@ namespace ContentManager.Test
                 "feeds/engineering-blogs.opml",
                 "feeds/README.md"
             };
-            var projectChanges = new List<string>()
+            List<string> projectChanges = new List<string>()
             {
                 ".gitignore",
                 ".vsts-content-manager.yml",
@@ -90,7 +90,7 @@ namespace ContentManager.Test
                 "projects/README.md",
                 "projects/LICENSE"
             };
-            var studyChanges = new List<string>()
+            List<string> studyChanges = new List<string>()
             {
                 ".gitignore",
                 ".vsts-content-manager.yml",
@@ -100,7 +100,7 @@ namespace ContentManager.Test
                 "study/README.md",
                 "study/LICENSE"
             };
-            var allData = new List<object[]>
+            List<object[]> allData = new List<object[]>
             {
                 new object[] { Types.InputType.blog, blogChanges, 3 },
                 new object[] { Types.InputType.feeds, feedChanges, 1 },

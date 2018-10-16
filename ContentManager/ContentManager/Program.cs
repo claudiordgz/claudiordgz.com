@@ -43,10 +43,10 @@ namespace ContentManager
         [ExcludeFromCodeCoverage]
         static Dictionary<Types.InputType, IEnumerable<string>> WrapGit(Configuration configuration)
         {
-            using (var repo = new Repository(configuration.RootPath))
+            using (Repository repo = new Repository(configuration.RootPath))
             {
-                var gitHelper = new GetFilesFromDiff(repo, configuration.RootPath);
-                var f = gitHelper.getFilesFromDiff();
+                GetFilesFromDiff gitHelper = new GetFilesFromDiff(repo, configuration.RootPath);
+                Dictionary<Types.InputType, IEnumerable<string>> f = gitHelper.getFilesFromDiff();
                 return FilterByTypes(f, configuration);
             }
         }
@@ -54,10 +54,10 @@ namespace ContentManager
         [ExcludeFromCodeCoverage]
         static void Main(string[] args)
         {
-            var configuration = ParseArguments(args);
+            Configuration configuration = ParseArguments(args);
             configuration.TypesToProcess = configuration.GetTypes();
             Func<Configuration, Dictionary<Types.InputType, IEnumerable<string>>> gitHelper = WrapGit;
-            var files = GetFiles.FromBuildType(configuration, gitHelper);
+            Dictionary<Types.InputType, IEnumerable<string>> files = GetFiles.FromBuildType(configuration, gitHelper);
         }
     }
 }
