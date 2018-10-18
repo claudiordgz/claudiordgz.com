@@ -58,6 +58,23 @@ namespace ContentManager.Util
             }
         }
 
+        public static (string user, string repository) GetUserAndRepository(string remoteUrl)
+        {
+            if (remoteUrl.Contains("https"))
+            {
+                string[] pieces = remoteUrl.Split("https://github.com/");
+                string[] userAndRepo = pieces[1].Split("/");
+                return (user: userAndRepo[0], repository: userAndRepo[1]);
+            }
+            else
+            {
+                string[] pieces = remoteUrl.Split(":");
+                string url = pieces[0];
+                string[] userAndRepo = pieces[1].Split("/");
+                return (user: userAndRepo[0], repository: userAndRepo[1].Replace(".git", ""));
+            }
+        }
+
         /// <summary>
         /// Gets username, repository name, and branch name from the github repo.
         /// If you do funny business with the Remote URL this won't work
@@ -70,11 +87,7 @@ namespace ContentManager.Util
             {
                 string currentHash = repo.Head.Tip.Sha;
                 string remoteUrl = repo.Network.Remotes.First().Url;
-                string[] pieces = remoteUrl.Split(":");
-                string url = pieces[0];
-                string[] userAndRepo = pieces[1].Split("/");
-                string user = userAndRepo[0];
-                string repository = userAndRepo[1].Replace(".git", "");
+                (string user, string repository) = GetUserAndRepository(remoteUrl);
                 foreach (Branch b in repo.Branches.Where(b => !b.IsRemote))
                 {
                     if (b.Tip.Sha == currentHash)
