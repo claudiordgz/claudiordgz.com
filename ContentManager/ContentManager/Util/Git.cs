@@ -88,7 +88,7 @@ namespace ContentManager.Util
                 string currentHash = repo.Head.Tip.Sha;
                 string remoteUrl = repo.Network.Remotes.First().Url;
                 (string user, string repository) = GetUserAndRepository(remoteUrl);
-                foreach (Branch b in repo.Branches.Where(b => !b.IsRemote))
+                foreach (Branch b in repo.Branches)
                 {
                     if (b.Tip.Sha == currentHash)
                     {
