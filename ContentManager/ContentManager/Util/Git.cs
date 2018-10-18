@@ -68,6 +68,7 @@ namespace ContentManager.Util
         {
             using (Repository repo = new Repository(rootPath))
             {
+                string currentHash = repo.Head.Tip.Sha;
                 string remoteUrl = repo.Network.Remotes.First().Url;
                 string[] pieces = remoteUrl.Split(":");
                 string url = pieces[0];
@@ -76,7 +77,7 @@ namespace ContentManager.Util
                 string repository = userAndRepo[1].Replace(".git", "");
                 foreach (Branch b in repo.Branches.Where(b => !b.IsRemote))
                 {
-                    if (b.IsCurrentRepositoryHead)
+                    if (b.Tip.Sha == currentHash)
                     {
                         return new RepositorySettings(user, b.FriendlyName, repository);
                     }
