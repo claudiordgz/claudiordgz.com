@@ -16,7 +16,7 @@ namespace ContentManager
         {
             RootPath = rootPath;
             ProcessConfigurationFile();
-            // GithubProperties = Git.GetCurrentGithubProperties(rootPath);
+            GithubProperties = Git.GetCurrentGithubProperties(rootPath);
         }
 
         public Types.InputType InputType { get; set; }
