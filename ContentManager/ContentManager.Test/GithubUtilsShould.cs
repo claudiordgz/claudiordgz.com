@@ -23,11 +23,18 @@ namespace ContentManager.Test
         [Theory]
         [InlineData("git@github.com:claudiordgz-website/content.git")]
         [InlineData("https://github.com/claudiordgz-website/content")]
-        public void HandlesSshRemoteAndHttpsRemote(string remoteUrl)
+        public void HandleSshRemoteAndHttpsRemote(string remoteUrl)
         {
             (string user, string repository) = Git.GetUserAndRepository(remoteUrl);
             user.Should().Be("claudiordgz-website");
             repository.Should().Be("content");
+        }
+
+        [Fact]
+        public void GetUrlWithBranchReturnsFullyQualifiedUrl ()
+        {
+            string a = "";
+            a.Should().NotBeEmpty();
         }
     }
 }

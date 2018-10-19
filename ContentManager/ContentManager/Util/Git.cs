@@ -62,7 +62,7 @@ namespace ContentManager.Util
         {
             if (remoteUrl.Contains("https"))
             {
-                string[] pieces = remoteUrl.Split("https://github.com/");
+                string[] pieces = remoteUrl.Split(".com/");
                 string[] userAndRepo = pieces[1].Split("/");
                 return (user: userAndRepo[0], repository: userAndRepo[1]);
             }

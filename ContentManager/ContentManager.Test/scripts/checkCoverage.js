@@ -12,6 +12,10 @@ function checkPercentage(percentage) {
 
 function main () {
   const fileContents = readFileSync('../Coverage/coverage.output').toString()
+  if (fileContents.indexOf('Test Run Failed') !== -1) {
+    console.error(`Tests failed`)
+    process.exit(1)
+  }
   const mainOutput = fileContents.substr(fileContents.indexOf('+---'), fileContents.lastIndexOf('---+'))
   const pieces = mainOutput.replace(/(\r\n\t|\n|\r\t)/g, '').split('|')
   let count = 0
