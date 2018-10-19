@@ -10,6 +10,11 @@ steps:
   displayName: Test
   continueOnError: true
   workingDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test
+- task: PublishTestResults@2
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: TestResults/*.trx
+    searchFolder: $(System.DefaultWorkingDirectory)/ContentManager/ContentManager.Test
 - script: dotnet reportgenerator -reports:Coverage/coverage.cobertura.xml -targetdir:Coverage/Report -reporttypes:HTMLInline
   displayName: Reports
   workingDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test
@@ -18,11 +23,6 @@ steps:
     codeCoverageTool: cobertura
     summaryFileLocation:  $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/Coverage/coverage.cobertura.xml
     reportDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/Coverage/Report
-- task: PublishTestResults@2
-  inputs:
-    testRunner: VSTest
-    testResultsFiles: TestResults/*.trx
-    searchFolder: $(System.DefaultWorkingDirectory)/ContentManager/ContentManager.Test
 - script: node checkCoverage.js
   displayName: Coverage Threshold
   workingDirectory: $(system.defaultWorkingDirectory)/ContentManager/ContentManager.Test/scripts
