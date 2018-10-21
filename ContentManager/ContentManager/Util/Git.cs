@@ -100,7 +100,10 @@ namespace ContentManager.Util
                 {
                     if (b.Tip.Sha == currentHash)
                     {
-                        return new RepositorySettings(user, b.FriendlyName, repository);
+                        string branchName = b.FriendlyName.Contains("origin/") ?
+                            b.FriendlyName.Replace("origin/", "") :
+                            b.FriendlyName;
+                        return new RepositorySettings(user, branchName, repository);
                     }
                 }
             }
