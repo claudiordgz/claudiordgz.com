@@ -1,7 +1,10 @@
 ﻿using Xunit;
 using FluentAssertions;
+using System.Linq;
 using Xunit.Abstractions;
 using ContentManager.Util;
+using System.IO;
+using System;
 
 namespace ContentManager.Test
 {
@@ -33,8 +36,18 @@ namespace ContentManager.Test
         [Fact]
         public void GetUrlWithBranchReturnsFullyQualifiedUrl ()
         {
-            string a = "";
-            a.Should().NotBeEmpty();
+            string srcPath = GetSrc.SrcPath();
+            Configuration config = new Configuration(srcPath);
+            Models.Thumbnail firstImage = config.Defaults.Thumbnails.First();
+            string pathToThumbnail = firstImage.File;
+            Uri uriToAsset = Git.AssembleUrlToAssetOnGithub(config.GithubProperties, srcPath, pathToThumbnail);
+            uriToAsset.Host.Should().Be("raw.githubusercontent.com");
+            string localPath = uriToAsset.LocalPath.Substring(1);
+            string[] pathPieces = localPath.Split('/');
+            pathPieces[0].Should().Be(config.GithubProperties.User);
+            pathPieces[1].Should().Be(config.GithubProperties.Repository);
+            pathPieces[2].Should().Be(config.GithubProperties.Branch);
+            localPath.Should().EndWith(firstImage.File);
         }
     }
 }

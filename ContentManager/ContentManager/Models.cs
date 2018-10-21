@@ -1,15 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Linq;
 
 namespace ContentManager.Models
 {
     public class SiteDefaults
     {
+        public List<Thumbnail> _thumbnails;
+
         public string ThumbnailDirectory { get; set; }
         public List<Author> Authors { get; set; }
         public List<Author> Credits { get; set; }
-        public List<Thumbnail> Thumbnails { get; set; }
+        public List<Thumbnail> Thumbnails
+        {
+            get => _thumbnails.Select(thumbnail =>
+             {
+                 if (!thumbnail.File.StartsWith(ThumbnailDirectory))
+                 {
+                    thumbnail.File = $"{ThumbnailDirectory}/{thumbnail.File}";
+                 }
+                 return thumbnail;
+             }).ToList();
+            set { _thumbnails = value; }
+        }
     }
 
     public class FrontMatter

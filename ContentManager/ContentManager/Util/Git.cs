@@ -1,5 +1,6 @@
 ﻿using LibGit2Sharp;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace ContentManager.Util
@@ -32,12 +33,8 @@ namespace ContentManager.Util
         /// <returns></returns>
         private static bool IsPathValid(string pathToAsset)
         {
-            return false;
-        } 
 
-        private static string GetUrlWithBranch(string pathToAsset)
-        {
-            return "";
+            return false;
         }
 
         /// <summary>
@@ -46,12 +43,23 @@ namespace ContentManager.Util
         /// </summary>
         /// <param name="pathToAsset"></param>
         /// <returns></returns>
-        public static string AssembleUrlToAssetOnGithub(Repository repoProperties, string pathToAsset)
+        private static Uri GetUrlWithBranch(RepositorySettings repoProperties, string rootPath, string pathToAsset)
         {
-            if (IsPathValid(pathToAsset))
+            string username = repoProperties.User;
+            string repository = repoProperties.Repository;
+            string branchName = repoProperties.Branch;
+            string path = Path.DirectorySeparatorChar == '\\' ?
+                pathToAsset.Replace(Path.DirectorySeparatorChar, '/') :
+                pathToAsset;
+            return new Uri($"https://raw.githubusercontent.com/{username}/{repository}/{branchName}/{path}");
+        }
+
+        public static Uri AssembleUrlToAssetOnGithub(RepositorySettings repoProperties, string rootPath, string pathToAsset)
+        {
+            string fullPath = Path.GetFullPath(new Uri(Path.Combine(rootPath, pathToAsset)).LocalPath);
+            if (File.Exists(fullPath))
             {
-                string urlToAsset = GetUrlWithBranch(pathToAsset);
-                return urlToAsset;
+                return GetUrlWithBranch(repoProperties, rootPath, pathToAsset);
             } else
             {
                 throw new GithubUtilFatalError("url cannot be assembled: path is invalid");
