@@ -27,17 +27,6 @@ namespace ContentManager.Util
     public class Git
     {
         /// <summary>
-        /// Make sure it's a file
-        /// </summary>
-        /// <param name="pathToAsset"></param>
-        /// <returns></returns>
-        private static bool IsPathValid(string pathToAsset)
-        {
-
-            return false;
-        }
-
-        /// <summary>
         /// We need a valid url to an asset such as
         /// https://raw.githubusercontent.com/username/repository/branch_name/path_to_file.ext
         /// </summary>
@@ -100,6 +89,7 @@ namespace ContentManager.Util
                 {
                     if (b.Tip.Sha == currentHash)
                     {
+                        // handle remote branches
                         string branchName = b.FriendlyName.Contains("origin/") ?
                             b.FriendlyName.Replace("origin/", "") :
                             b.FriendlyName;

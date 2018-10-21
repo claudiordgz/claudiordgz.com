@@ -1,0 +1,5 @@
+queue: Hosted Linux Preview
+variables:
+  buildConfiguration: 'Release'
+
+steps:
