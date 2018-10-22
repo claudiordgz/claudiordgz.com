@@ -1,6 +1,13 @@
 variables:
   buildConfiguration: 'Release'
 
+trigger:
+  paths:
+    exclude:
+    - content/README.md
+    include:
+    - content
+
 jobs:
 - job: ContentBuild
   displayName: Builds and Processes any new content
@@ -8,12 +15,6 @@ jobs:
     clean: all
   pool:
     vmImage: ubuntu-1604
-  trigger:
-    paths:
-      exclude:
-      - content/README.md
-      include:
-      - content
   steps:
   - script: dotnet build --configuration $(buildConfiguration)
     displayName: Build
