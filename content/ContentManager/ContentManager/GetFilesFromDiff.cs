@@ -11,11 +11,13 @@ namespace ContentManager
     {
         private readonly IRepository _repo;
         private readonly string _pathToSrc;
+        private readonly string _contentDirectory;
 
-        public GetFilesFromDiff(IRepository repo, string pathToSrc)
+        public GetFilesFromDiff(IRepository repo, string pathToSrc, string contentDirectory)
         {
             _repo = repo;
             _pathToSrc = pathToSrc;
+            _contentDirectory = contentDirectory;
         }
 
         internal static bool ShouldDiscardPath(string path)
@@ -48,9 +50,10 @@ namespace ContentManager
             List<string> projects = new List<string>();
             List<string> study = new List<string>();
             Dictionary<Types.InputType, IEnumerable<string>> paths = new Dictionary<Types.InputType, IEnumerable<string>>();
+            bool startsWith(string path, string contentDirectory, Types.InputType t) => path.StartsWith($"{_contentDirectory}/{t.ToString("G")}");
             foreach (string p in changedPaths)
             {
-                if (p.StartsWith(Types.InputType.blog.ToString("G")))
+                if (startsWith(p, _contentDirectory, Types.InputType.blog))
                 {
                     if (!paths.ContainsKey(Types.InputType.blog))
                     {
@@ -62,7 +65,7 @@ namespace ContentManager
                         blog.Add(nP);
                     }
                 }
-                else if (p.StartsWith(Types.InputType.feeds.ToString("G")))
+                else if (startsWith(p, _contentDirectory, Types.InputType.feeds))
                 {
                     if (!paths.ContainsKey(Types.InputType.feeds))
                     {
@@ -75,7 +78,7 @@ namespace ContentManager
                         feeds.Add(nP);
                     }
                 }
-                else if (p.StartsWith(Types.InputType.projects.ToString("G")))
+                else if (startsWith(p, _contentDirectory, Types.InputType.projects))
                 {
                     if (!paths.ContainsKey(Types.InputType.projects))
                     {
@@ -87,7 +90,7 @@ namespace ContentManager
                         projects.Add(nP);
                     }
                 }
-                else if (p.StartsWith(Types.InputType.study.ToString("G")))
+                else if (startsWith(p, _contentDirectory, Types.InputType.study))
                 {
                     if (!paths.ContainsKey(Types.InputType.study))
                     {

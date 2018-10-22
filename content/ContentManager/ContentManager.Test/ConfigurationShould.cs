@@ -11,32 +11,32 @@ namespace ContentManager.Test
         [Fact]
         public void ConfigurationPopulatesAuthors()
         {
-            string rootPath = GetSrc.SrcPath();
-            Configuration configuration = new Configuration(rootPath);
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            Configuration configuration = new Configuration(GitDirectory, ContentDirectory);
             configuration.Defaults.Authors.Should().NotBeEmpty();
         }
 
         [Fact]
         public void ThumbnailPathMustBeSet()
         {
-            string rootPath = GetSrc.SrcPath();
-            Configuration configuration = new Configuration(rootPath);
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            Configuration configuration = new Configuration(GitDirectory, ContentDirectory);
             configuration.Defaults.ThumbnailDirectory.Should().NotBeEmpty();
         }
 
         [Fact]
         public void CreditsMustBeDefinedy()
         {
-            string rootPath = GetSrc.SrcPath();
-            Configuration configuration = new Configuration(rootPath);
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            Configuration configuration = new Configuration(GitDirectory, ContentDirectory);
             configuration.Defaults.Credits.Should().NotBeEmpty();
         }
 
         [Fact]
         public void ThumbnailsMustBeDefined()
         {
-            string rootPath = GetSrc.SrcPath();
-            Configuration configuration = new Configuration(rootPath);
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            Configuration configuration = new Configuration(GitDirectory, ContentDirectory);
             configuration.Defaults.Thumbnails.Should().NotBeEmpty();
         }
     }

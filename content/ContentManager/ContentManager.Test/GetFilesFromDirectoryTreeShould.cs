@@ -9,9 +9,9 @@ namespace ContentManager.Tests
         [Fact]
         public void ReturnsContentFromAllFoldersByTypesAndSrcPath()
         {
-            string srcPath = GetSrc.SrcPath();
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
             System.Collections.Generic.List<Types.InputType> types = Types.GetTypes(Types.InputType.all);
-            System.Collections.Generic.Dictionary<Types.InputType, System.Collections.Generic.IEnumerable<string>> files = GetFilesFromDirectoryTree.GetAllFiles(types, srcPath);
+            System.Collections.Generic.Dictionary<Types.InputType, System.Collections.Generic.IEnumerable<string>> files = GetFilesFromDirectoryTree.GetAllFiles(types, ContentDirectory);
             AnallyExpect.MarkdownXmlOrOpmlFilesOnAll(files);
         }
 
@@ -22,16 +22,17 @@ namespace ContentManager.Tests
         [InlineData(Types.InputType.study)]
         public void ReturnsContentSpecificFolderByTypesAndSrcPath(Types.InputType type)
         {
-            string srcPath = GetSrc.SrcPath();
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
             System.Collections.Generic.List<Types.InputType> types = Types.GetTypes(type);
-            System.Collections.Generic.Dictionary<Types.InputType, System.Collections.Generic.IEnumerable<string>> files = GetFilesFromDirectoryTree.GetAllFiles(types, srcPath);
+            System.Collections.Generic.Dictionary<Types.InputType, System.Collections.Generic.IEnumerable<string>> files = GetFilesFromDirectoryTree.GetAllFiles(types, ContentDirectory);
             AnallyExpect.MarkdownXmlOrOpmlFilesOnSingleType(type, files);
         }
 
         [Fact]
         public void ReturnsContentFromAllFoldersByConfiguration()
         {
-            Configuration configuration = new Configuration(GetSrc.SrcPath())
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            Configuration configuration = new Configuration(GitDirectory, ContentDirectory)
             {
                 InputType = Types.InputType.all,
                 BuildType = Types.BuildType.origin,
@@ -49,7 +50,8 @@ namespace ContentManager.Tests
         [InlineData(Types.InputType.study)]
         public void ReturnsContentSpecificFolderByConfiguration(Types.InputType type)
         {
-            Configuration configuration = new Configuration(GetSrc.SrcPath())
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            Configuration configuration = new Configuration(GitDirectory, ContentDirectory)
             {
                 InputType = type,
                 BuildType = Types.BuildType.origin,

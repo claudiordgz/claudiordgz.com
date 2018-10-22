@@ -20,7 +20,7 @@ namespace ContentManager
         {
             if (configuration.BuildType == Types.BuildType.origin)
             {
-                return GetFilesFromDirectoryTree.GetAllFiles(configuration.TypesToProcess, configuration.RootPath);
+                return GetFilesFromDirectoryTree.GetAllFiles(configuration.TypesToProcess, configuration.ContentDirectory);
             }
             else
             {

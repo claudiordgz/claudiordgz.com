@@ -13,8 +13,8 @@ namespace ContentManager.Test
         [Fact]
         public void GetsRepositoryProperties()
         {
-            string srcPath = GetSrc.SrcPath();
-            RepositorySettings props = Git.GetCurrentGithubProperties(srcPath);
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            RepositorySettings props = Git.GetCurrentGithubProperties(GitDirectory);
             props.User.Should().NotBeEmpty("User needs to be defined");
             props.Branch.Should().NotBeEmpty("Branch needs to be defined");
             props.Repository.Should().NotBeEmpty("Repository needs to be defined");
@@ -36,11 +36,11 @@ namespace ContentManager.Test
         [Fact]
         public void GetUrlWithBranchReturnsFullyQualifiedUrl ()
         {
-            string srcPath = GetSrc.SrcPath();
-            Configuration config = new Configuration(srcPath);
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            Configuration config = new Configuration(GitDirectory, ContentDirectory);
             Models.Thumbnail firstImage = config.Defaults.Thumbnails.First();
             string pathToThumbnail = firstImage.File;
-            Uri uriToAsset = Git.AssembleUrlToAssetOnGithub(config.GithubProperties, srcPath, pathToThumbnail);
+            Uri uriToAsset = Git.AssembleUrlToAssetOnGithub(config.GithubProperties, ContentDirectory, pathToThumbnail);
             uriToAsset.Host.Should().Be("raw.githubusercontent.com");
             string localPath = uriToAsset.LocalPath.Substring(1);
             string[] pathPieces = localPath.Split('/');

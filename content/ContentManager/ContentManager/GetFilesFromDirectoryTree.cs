@@ -95,7 +95,7 @@ namespace ContentManager
 
         public static Dictionary<Types.InputType, IEnumerable<string>> GetAllFiles(Configuration configuration)
         {
-            return GetAllFiles(configuration.TypesToProcess, configuration.RootPath);
+            return GetAllFiles(configuration.TypesToProcess, configuration.ContentDirectory);
         }
     }
 }

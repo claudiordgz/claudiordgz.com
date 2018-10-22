@@ -16,24 +16,26 @@ namespace ContentManager.Test
             {
                 ".gitignore",
                 ".vsts-content-manager.yml",
-                "ContentManager/ContentManager.Test/ContentManager.Test.csproj",
-                "ContentManager/ContentManager.Test/GetFilesShould.cs",
-                "ContentManager/ContentManager.Test/Properties/launchSettings.json",
-                "ContentManager/ContentManager.Test/scripts/checkCoverage.js",
-                "ContentManager/ContentManager.sln",
-                "ContentManager/ContentManager/GetFiles.cs",
-                "ContentManager/ContentManager/Models.cs",
-                "ContentManager/ContentManager/Options.cs",
-                "ContentManager/ContentManager/Program.cs",
-                "ContentManager/ContentManager/Properties/launchSettings.json",
-                "ContentManager/ContentManager/Types.cs",
-                "ContentManager/ContentManagerTest/UnitTest1.cs",
-                "ContentManager/README.md"
+                "content/ContentManager/ContentManager.Test/ContentManager.Test.csproj",
+                "content/ContentManager/ContentManager.Test/GetFilesShould.cs",
+                "content/ContentManager/ContentManager.Test/Properties/launchSettings.json",
+                "content/ContentManager/ContentManager.Test/scripts/checkCoverage.js",
+                "content/ContentManager/ContentManager.sln",
+                "content/ContentManager/ContentManager/GetFiles.cs",
+                "content/ContentManager/ContentManager/Models.cs",
+                "content/ContentManager/ContentManager/Options.cs",
+                "content/ContentManager/ContentManager/Program.cs",
+                "content/ContentManager/ContentManager/Properties/launchSettings.json",
+                "content/ContentManager/ContentManager/Types.cs",
+                "content/ContentManager/ContentManagerTest/UnitTest1.cs",
+                "content/ContentManager/README.md",
+                "backend/someFile.tf",
+                "frontend/someOtherFile.js"
             };
 
             Mock<IRepository> mockRepo = new Mock<IRepository>();
-            string srcPath = GetSrc.SrcPath();
-            GetFilesFromDiff gitHelper = new GetFilesFromDiff(mockRepo.Object, srcPath);
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            GetFilesFromDiff gitHelper = new GetFilesFromDiff(mockRepo.Object, GitDirectory, "content");
             Dictionary<Types.InputType, IEnumerable<string>> files = gitHelper.PackPaths(mockChanges as IEnumerable<string>);
             Assert.Empty(files);
         }
@@ -43,8 +45,8 @@ namespace ContentManager.Test
         public void ReturnsContentSpecificFolder(Types.InputType type, IEnumerable<string> list, int fileCount)
         {
             Mock<IRepository> mockRepo = new Mock<IRepository>();
-            string srcPath = GetSrc.SrcPath();
-            GetFilesFromDiff gitHelper = new GetFilesFromDiff(mockRepo.Object, srcPath);
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            GetFilesFromDiff gitHelper = new GetFilesFromDiff(mockRepo.Object, GitDirectory, "content");
             Dictionary<Types.InputType, IEnumerable<string>> files = gitHelper.PackPaths(list as IEnumerable<string>);
             Assert.Single(files);
             foreach (KeyValuePair<Types.InputType, IEnumerable<string>> entry in files)
@@ -66,39 +68,39 @@ namespace ContentManager.Test
                 ".gitignore",
                 ".vsts-content-manager.yml",
                 "ContentManager/ContentManager.Test/ContentManager.Test.csproj",
-                "blog/README.md",
-                "blog/LICENSE",
-                "blog/posts/about-me.md",
-                "blog/posts/abstract-factory-cpp.md",
-                "blog/posts/ad-generator-thoughts-after-first-commit.md"
+                "content/blog/README.md",
+                "content/blog/LICENSE",
+                "content/blog/posts/about-me.md",
+                "content/blog/posts/abstract-factory-cpp.md",
+                "content/blog/posts/ad-generator-thoughts-after-first-commit.md"
             };
             List<string> feedChanges = new List<string>()
             {
                 ".gitignore",
                 ".vsts-content-manager.yml",
                 "ContentManager/ContentManager.Test/ContentManager.Test.csproj",
-                "feeds/engineering-blogs.opml",
-                "feeds/README.md"
+                "content/feeds/engineering-blogs.opml",
+                "content/feeds/README.md"
             };
             List<string> projectChanges = new List<string>()
             {
                 ".gitignore",
                 ".vsts-content-manager.yml",
                 "ContentManager/ContentManager.Test/ContentManager.Test.csproj",
-                "projects/blog/README.md",
-                "projects/blog/posts/redesigning-the-blog.md",
-                "projects/README.md",
-                "projects/LICENSE"
+                "content/projects/blog/README.md",
+                "content/projects/blog/posts/redesigning-the-blog.md",
+                "content/projects/README.md",
+                "content/projects/LICENSE"
             };
             List<string> studyChanges = new List<string>()
             {
                 ".gitignore",
                 ".vsts-content-manager.yml",
                 "ContentManager/ContentManager.Test/ContentManager.Test.csproj",
-                "study/cormen/README.md",
-                "study/cormen/posts/corment-algorithms-ch02.md",
-                "study/README.md",
-                "study/LICENSE"
+                "content/study/cormen/README.md",
+                "content/study/cormen/posts/corment-algorithms-ch02.md",
+                "content/study/README.md",
+                "content/study/LICENSE"
             };
             List<object[]> allData = new List<object[]>
             {

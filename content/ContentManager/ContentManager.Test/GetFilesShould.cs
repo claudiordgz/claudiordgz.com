@@ -24,7 +24,8 @@ namespace ContentManager.Test
         [Fact]
         public void ReturnsContentFromAllFolders()
         {
-            Configuration configuration = new Configuration(GetSrc.SrcPath())
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            Configuration configuration = new Configuration(GitDirectory, ContentDirectory)
             {
                 InputType = Types.InputType.all,
                 BuildType = Types.BuildType.origin,
@@ -43,7 +44,8 @@ namespace ContentManager.Test
         [InlineData(Types.InputType.study)]
         public void ReturnsContentSpecificFolder(Types.InputType type)
         {
-            Configuration configuration = new Configuration(GetSrc.SrcPath())
+            (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
+            Configuration configuration = new Configuration(GitDirectory, ContentDirectory)
             {
                 InputType = type,
                 BuildType = Types.BuildType.origin,

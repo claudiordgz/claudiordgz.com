@@ -12,17 +12,19 @@ namespace ContentManager
 
     public class Configuration
     {
-        public Configuration(string rootPath)
+        public Configuration(string gitDirectory, string contentDirectory)
         {
-            RootPath = rootPath;
+            GitDirectory = gitDirectory;
+            ContentDirectory = contentDirectory;
             ProcessConfigurationFile();
-            GithubProperties = Git.GetCurrentGithubProperties(rootPath);
+            GithubProperties = Git.GetCurrentGithubProperties(gitDirectory);
         }
 
         public Types.InputType InputType { get; set; }
         public Types.BuildType BuildType { get; set; }
         public bool Verbose { get; set; }
-        public string RootPath { get; set; }
+        public string GitDirectory { get; set; }
+        public string ContentDirectory { get; set; }
         public RepositorySettings GithubProperties { get; set; }
         public List<Types.InputType> TypesToProcess { get; set; }
         public SiteDefaults Defaults { get; set; }
@@ -34,12 +36,13 @@ namespace ContentManager
             return Types.GetTypes(InputType);
         }
 
+        // TODO: Move this to an Argument from main
         private const string configurationFileName = "configuration.yml";
         private readonly string[] configurationKeys = new string[] { "thumbnailDirectory", "authors", "credits", "thumbnails" };
 
         private void ProcessConfigurationFile ()
         {
-            string contents = File.ReadAllText(Path.GetFullPath(Path.Combine(RootPath, configurationFileName)));
+            string contents = File.ReadAllText(Path.GetFullPath(Path.Combine(ContentDirectory, configurationFileName)));
             YamlStream yaml = new YamlStream();
             StringReader input = new StringReader(contents);
 

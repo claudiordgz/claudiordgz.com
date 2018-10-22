@@ -4,6 +4,7 @@ using CommandLine;
 using System.Collections.Generic;
 using LibGit2Sharp;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace ContentManager
 {
@@ -26,8 +27,8 @@ namespace ContentManager
         [ExcludeFromCodeCoverage]
         static Configuration ParseArguments (string [] args)
         {
-            string rootPath = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
-            Configuration config = new Configuration(rootPath);
+            string gitDirectory = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
+            Configuration config = new Configuration(gitDirectory, Path.Combine(gitDirectory, "content"));
             Parser.Default.ParseArguments<Options>(args)
                 .MapResult(opts => MapOptionsToResults(config, opts),
                 notParsedFunc);
@@ -43,9 +44,9 @@ namespace ContentManager
         [ExcludeFromCodeCoverage]
         static Dictionary<Types.InputType, IEnumerable<string>> WrapGit(Configuration configuration)
         {
-            using (Repository repo = new Repository(configuration.RootPath))
+            using (Repository repo = new Repository(configuration.GitDirectory))
             {
-                GetFilesFromDiff gitHelper = new GetFilesFromDiff(repo, configuration.RootPath);
+                GetFilesFromDiff gitHelper = new GetFilesFromDiff(repo, configuration.GitDirectory, "content");
                 Dictionary<Types.InputType, IEnumerable<string>> f = gitHelper.getFilesFromDiff();
                 return FilterByTypes(f, configuration);
             }
