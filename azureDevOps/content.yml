@@ -23,16 +23,18 @@ jobs:
     continueOnError: true
     workingDirectory: $(system.defaultWorkingDirectory)/content/ContentManager/ContentManager.Test
   - task: PublishTestResults@2
-    testRunner: VSTest
-    testResultsFiles: TestResults/*.trx
-    searchFolder: $(System.DefaultWorkingDirectory)/content/ContentManager/ContentManager.Test
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: TestResults/*.trx
+      searchFolder: $(System.DefaultWorkingDirectory)/content/ContentManager/ContentManager.Test
   - script: dotnet reportgenerator -reports:Coverage/coverage.cobertura.xml -targetdir:Coverage/Report -reporttypes:HTMLInline
     displayName: Reports
     workingDirectory: $(system.defaultWorkingDirectory)/content/ContentManager/ContentManager.Test
   - task: PublishCodeCoverageResults@1
-    codeCoverageTool: cobertura
-    summaryFileLocation:  $(system.defaultWorkingDirectory)/content/ContentManager/ContentManager.Test/Coverage/coverage.cobertura.xml
-    reportDirectory: $(system.defaultWorkingDirectory)/content/ContentManager/ContentManager.Test/Coverage/Report
+  	inputs:
+      codeCoverageTool: cobertura
+      summaryFileLocation:  $(system.defaultWorkingDirectory)/content/ContentManager/ContentManager.Test/Coverage/coverage.cobertura.xml
+      reportDirectory: $(system.defaultWorkingDirectory)/content/ContentManager/ContentManager.Test/Coverage/Report
   - script: node checkCoverage.js
     displayName: Coverage Threshold
     workingDirectory: $(system.defaultWorkingDirectory)/content/ContentManager/ContentManager.Test/scripts
