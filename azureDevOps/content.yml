@@ -3,8 +3,6 @@ variables:
 
 trigger:
   paths:
-    exclude:
-    - content/README.md
     include:
     - content
 
