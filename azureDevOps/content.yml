@@ -31,7 +31,7 @@ jobs:
     displayName: Reports
     workingDirectory: $(system.defaultWorkingDirectory)/content/ContentManager/ContentManager.Test
   - task: PublishCodeCoverageResults@1
-  	inputs:
+    inputs:
       codeCoverageTool: cobertura
       summaryFileLocation:  $(system.defaultWorkingDirectory)/content/ContentManager/ContentManager.Test/Coverage/coverage.cobertura.xml
       reportDirectory: $(system.defaultWorkingDirectory)/content/ContentManager/ContentManager.Test/Coverage/Report
