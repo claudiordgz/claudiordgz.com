@@ -11,6 +11,9 @@ trigger:
     exclude:
     - backend/*
     - frontend/*
+    - .gitignore
+    - LICENSE
+    - README.md
 
 jobs:
 - job: ContentBuild
