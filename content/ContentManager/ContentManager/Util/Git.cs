@@ -31,7 +31,7 @@ namespace ContentManager.Util
         /// https://raw.githubusercontent.com/username/repository/branch_name/path_to_file.ext
         /// </summary>
         /// <param name="pathToAsset"></param>
-        /// <returns></returns>
+        /// <returns>The path to the asset in Github</returns>
         private static Uri GetUrlWithBranch(RepositorySettings repoProperties, string rootPath, string pathToAsset)
         {
             string username = repoProperties.User;
