@@ -2,7 +2,6 @@
 using FluentAssertions;
 using ContentManager.Util;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace ContentManager.Test

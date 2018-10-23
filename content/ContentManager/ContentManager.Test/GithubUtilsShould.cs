@@ -1,9 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using System.Linq;
-using Xunit.Abstractions;
 using ContentManager.Util;
-using System.IO;
 using System;
 
 namespace ContentManager.Test
