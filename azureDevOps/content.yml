@@ -2,9 +2,15 @@ variables:
   buildConfiguration: 'Release'
 
 trigger:
+  branches:
+    include:
+    - *
   paths:
     include:
-    - content
+    - content/*
+    exclude:
+    - backend/*
+    - frontend/*
 
 jobs:
 - job: ContentBuild
