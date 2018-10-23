@@ -27,10 +27,9 @@ namespace ContentManager
             {
                 return true;
             }
-            // Path.DirectorySeparatorChar returns \\ for windows
-            // we're using git
+            // Path.DirectorySeparatorChar returns \\ for windows but we're using Git
             string[] directories = path.Split('/');
-            if (directories.Length == 2 && directories[1].Contains("README"))
+            if (directories.Length == 3 && directories[2].Contains("README"))
             {
                 return true;
             }
