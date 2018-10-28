@@ -9,8 +9,9 @@ trigger:
     include:
     - frontend/*
     exclude:
+    - azureDevOps/*
     - backend/*
-    - frontend/*
+    - content/*
     - .gitignore
     - LICENSE
     - README.md
