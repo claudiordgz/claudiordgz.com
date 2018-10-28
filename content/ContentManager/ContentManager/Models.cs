@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using YamlDotNet.Serialization;
 
 namespace ContentManager.Models
 {
@@ -29,12 +30,23 @@ namespace ContentManager.Models
     {
         public string Title { get; set; }
         public string Slug { get; set; }
-        public DateTime Created { get; set; }
+        [YamlMember(Alias = "date_created", ApplyNamingConventions = false)]
+        public DateTime? Created { get; set; }
+        [YamlMember(Alias = "date_published", ApplyNamingConventions = false)]
         public DateTime? Published { get; set; }
+        [YamlMember(Alias = "date_updated", ApplyNamingConventions = false)]
         public DateTime? Updated { get; set; }
         public List<string> Tags { get; set; }
-        public bool? IsDraft { get; set; }
+        [YamlMember(Alias = "draft", ApplyNamingConventions = false)]
+        public bool IsDraft { get; set; }
         public string Author { get; set; }
+        public Thumbnail Thumbnail { get; set; }
+
+        public object this[string propertyName]
+        {
+            get { return GetType().GetProperty(propertyName).GetValue(this, null); }
+            set { GetType().GetProperty(propertyName).SetValue(this, value, null); }
+        }
     }
 
     public class Thumbnail

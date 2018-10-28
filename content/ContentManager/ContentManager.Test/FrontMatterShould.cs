@@ -29,6 +29,28 @@ date_created: 2018-10-13T16:08:55+00:00
             Assert.True(frontMatter.IsDraft);
         }
 
+        [Fact]
+        public void ParsesThumbnail()
+        {
+            string mockPost = @"---
+title: Docker Installation Notes
+slug: docker-installation-notes
+author: oreo
+draft: true
+date_created: 2018-10-13T16:08:55+00:00
+thumbnail:
+    id: my own image
+    file: some/relative/path
+    type: svg
+---
+<my-component>Some-data</my-component>
+";
+            FrontMatter frontMatter = FrontMatterManager.GetFrontMatter(mockPost);
+            Assert.Equal("my own image", frontMatter.Thumbnail.Id);
+            Assert.Equal("some/relative/path", frontMatter.Thumbnail.File);
+            Assert.Equal("svg", frontMatter.Thumbnail.Type);
+        }
+
         [Theory]
         [MemberData(nameof(GetFrontMatterFormatExceptionPosts))]
         public void WillExplodeIfFrontMatterHasNoStartOrEnd(string mockPost, string message)
@@ -63,14 +85,14 @@ date_created: 2018-10-13T16:08:55+00:00
             DateTime updatedDateTime = FrontMatterManager.FromISODateString(updatedDate);
             Assert.Equal(publishedDateTime.Ticks, pbDate.Ticks);
             Assert.Equal(updatedDateTime.Ticks, upDate.Ticks);
-            Assert.Null(frontMatter.IsDraft);
+            Assert.False(frontMatter.IsDraft);
         }
 
         [Theory]
         [MemberData(nameof(GetDatesExceptions))]
         public void CheckDateTimeParsingThrows(string mockPost)
         {
-            Exception ex = Assert.Throws<FormatException>(() => FrontMatterManager.GetFrontMatter(mockPost));
+            Exception ex = Assert.Throws<FrontMatterFormatException>(() => FrontMatterManager.GetFrontMatter(mockPost));
         }
 
         public static string mockDateTemplate = @"---
@@ -122,16 +144,11 @@ date_updated: {1}
             string t3MockPost = builder.ToString();
             builder.Clear();
 
-            builder.AppendFormat(mockDateTemplate, "", "");
-            string t4MockPost = builder.ToString();
-            builder.Clear();
-
             List<object[]> allData = new List<object[]>
             {
                 new object[] { t1MockPost },
                 new object[] { t2MockPost },
-                new object[] { t3MockPost },
-                new object[] { t4MockPost }
+                new object[] { t3MockPost }
             };
             return allData;
         }
@@ -177,7 +194,7 @@ slug: some-slug
 ---
 <my-component>Some-data</my-component>
 ",
-                "'title' is mandatory"
+                "'Title' is mandatory"
                 },
                 new object[]
                 {
@@ -186,7 +203,7 @@ slug: some-slug
 ---
 <my-component>Some-data</my-component>
 ",
-                "'title' is mandatory"
+                "'Title' is mandatory"
                 },
                 new object[]
                 {
@@ -196,7 +213,7 @@ slug:
 ---
 <my-component>Some-data</my-component>
 ",
-                "'slug' is mandatory"
+                "'Slug' is mandatory"
                 },
                 new object[]
                 {
@@ -205,7 +222,7 @@ title: some-title
 ---
 <my-component>Some-data</my-component>
 ",
-                "'slug' is mandatory"
+                "'Slug' is mandatory"
                 },
                 new object[]
                 {
@@ -216,7 +233,7 @@ author:
 ---
 <my-component>Some-data</my-component>
 ",
-                "'author' is mandatory"
+                "'Author' is mandatory"
                 },
                 new object[]
                 {
@@ -226,7 +243,7 @@ slug: some-slug
 ---
 <my-component>Some-data</my-component>
 ",
-                "'author' is mandatory"
+                "'Author' is mandatory"
                 },
                 new object[]
                 {
@@ -237,7 +254,7 @@ author: some author
 ---
 <my-component>Some-data</my-component>
 ",
-                "'date_created' is mandatory"
+                "'Created' is mandatory"
                 },
                 new object[]
                 {
@@ -249,7 +266,7 @@ date_created:
 ---
 <my-component>Some-data</my-component>
 ",
-                "'date_created' is mandatory"
+                "'Created' is mandatory"
                 },
             };
         }

@@ -49,7 +49,7 @@ namespace ContentManager.FileManagement
                 Id = frontMatter.Slug,
                 Summary = "",
                 Tags = frontMatter.Tags,
-                DateCreated = FrontMatterManager.FromDateTimeToISOString(frontMatter.Created),
+                DateCreated = FrontMatterManager.FromDateTimeToISOString(frontMatter.Created.Value),
                 DateUpdated = frontMatter.Updated.HasValue ? FrontMatterManager.FromDateTimeToISOString(frontMatter.Updated.Value) : "",
                 DatePublished = frontMatter.Updated.HasValue ? FrontMatterManager.FromDateTimeToISOString(frontMatter.Published.Value) : ""
             };
