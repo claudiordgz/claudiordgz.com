@@ -36,16 +36,18 @@ namespace ContentManager.Test
         {
             (string GitDirectory, string ContentDirectory) = GetSrc.SrcPath();
             Configuration config = new Configuration(GitDirectory, ContentDirectory);
-            Models.Thumbnail firstImage = config.Defaults.Thumbnails.First();
-            string pathToThumbnail = firstImage.File;
-            Uri uriToAsset = Git.AssembleUrlToAssetOnGithub(config.GithubProperties, ContentDirectory, pathToThumbnail);
-            uriToAsset.Host.Should().Be("raw.githubusercontent.com");
-            string localPath = uriToAsset.LocalPath.Substring(1);
-            string[] pathPieces = localPath.Split('/');
-            pathPieces[0].Should().Be(config.GithubProperties.User);
-            pathPieces[1].Should().Be(config.GithubProperties.Repository);
-            pathPieces[2].Should().Be(config.GithubProperties.Branch);
-            localPath.Should().EndWith(firstImage.File);
+            foreach (var image in config.Defaults.Thumbnails)
+            {
+                string pathToThumbnail = image.File;
+                Uri uriToAsset = Git.AssembleUrlToAssetOnGithub(config.GithubProperties, ContentDirectory, pathToThumbnail);
+                uriToAsset.Host.Should().Be("raw.githubusercontent.com");
+                string localPath = uriToAsset.LocalPath.Substring(1);
+                string[] pathPieces = localPath.Split('/');
+                pathPieces[0].Should().Be(config.GithubProperties.User);
+                pathPieces[1].Should().Be(config.GithubProperties.Repository);
+                pathPieces[2].Should().Be(config.GithubProperties.Branch);
+                localPath.Should().EndWith(image.File);
+            }
         }
     }
 }

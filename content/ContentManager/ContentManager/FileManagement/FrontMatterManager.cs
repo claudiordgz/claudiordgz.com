@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using YamlDotNet.RepresentationModel;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace ContentManager.FileManagement
 {
@@ -33,7 +35,7 @@ namespace ContentManager.FileManagement
         /// <exception cref="FormatException">Thrown date format and culture info are incompatible</exception>
         public static DateTime FromISODateString(string date)
         {
-            return DateTime.Parse(date, null, DateTimeStyles.RoundtripKind);
+            return DateTime.ParseExact(date, "yyyy-MM-dd'T'HH:mm:ss.FFFK", CultureInfo.InvariantCulture);
         }
 
         public static string FromDateTimeToISOString(DateTime date)
@@ -55,56 +57,22 @@ namespace ContentManager.FileManagement
             return newLine;
         }
 
-        public static DateTime? GetDateTimeFieldFromMapping(YamlMappingNode mapping, string name)
-        {
-            if (mapping.Children.ContainsKey(name))
-            {
-                return FromISODateString(mapping.Children[name].ToString());
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        private static bool? GetFlag(YamlMappingNode mapping, string name)
-        {
-            if (mapping.Children.ContainsKey(name))
-            {
-                return mapping.Children[name].ToString() == "true" ? true : false;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         /// <summary>
         /// Blows up in case required fields are not available
         /// </summary>
         /// <param name="mapping">Variable dictionary from Post</param>
         /// <exception cref="FrontMatterMissingFieldsException">Thrown when required fields are missing</exception>
-        private static void FrontMatterContentSanityCheck(YamlMappingNode mapping)
+        private static void FrontMatterContentSanityCheck(FrontMatter frontMatter)
         {
-            bool check(string fieldName) => !mapping.Children.ContainsKey(fieldName) || string.IsNullOrEmpty(mapping.Children[fieldName].ToString());
-            List<string> REQUIRED_FIELDS = new List<string> { "title", "slug", "author", "date_created" };
+            List<string> REQUIRED_FIELDS = new List<string> { "Title", "Slug", "Author", "Created" };
             foreach (string field in REQUIRED_FIELDS)
             {
-                if (check(field))
+                if (frontMatter[field] == null)
                 {
                     string msg = string.Format("'{0}' is mandatory", field);
                     throw new FrontMatterMissingFieldsException(msg);
                 }
             }
-        }
-
-        private static YamlMappingNode ConvertYaml(string frontMatterYaml)
-        {
-            StringReader input = new StringReader(frontMatterYaml);
-            YamlStream yaml = new YamlStream();
-            yaml.Load(input);
-            YamlMappingNode mapping = (YamlMappingNode)yaml.Documents[0].RootNode;
-            return mapping;
         }
 
         private static string GetFrontMatterFromText(string contents)
@@ -126,40 +94,33 @@ namespace ContentManager.FileManagement
             return contents.Substring(pFromLength, pTo);
         }
 
-        private static List<string> GetTags(YamlMappingNode mapping)
+        public static FrontMatter DeserializeContent(string contents)
         {
-            return mapping.Children.ContainsKey("tags") ?
-                new List<string>(mapping.Children["tags"].ToString().Split(','))
-                :
-                new List<string>();
-        }
-
-        private static FrontMatter SetupFrontMatter (YamlMappingNode mapping)
-        {
-            DateTime? published = GetDateTimeFieldFromMapping(mapping, "date_published");
-            DateTime? updated = GetDateTimeFieldFromMapping(mapping, "date_updated");
-            List<string> tags = GetTags(mapping);
-            bool? isDraft = GetFlag(mapping, "draft");
-            FrontMatter frontMatter = new FrontMatter
+            try
             {
-                Title = mapping.Children["title"].ToString(),
-                Slug = mapping.Children["slug"].ToString(),
-                Author = mapping.Children["author"].ToString(),
-                Created = GetDateTimeFieldFromMapping(mapping, "date_created").Value,
-                Published = published,
-                Updated = updated,
-                Tags = tags,
-                IsDraft = isDraft
-            };
-            return frontMatter;
+                string frontMatterYaml = GetFrontMatterFromText(contents);
+
+                YamlStream yaml = new YamlStream();
+                StringReader input = new StringReader(frontMatterYaml);
+
+                Deserializer deserializer = new DeserializerBuilder()
+                    .WithNamingConvention(new CamelCaseNamingConvention())
+                    .Build();
+
+                FrontMatter frontMatter = deserializer.Deserialize<FrontMatter>(input);
+                return frontMatter;
+            }
+            catch (Exception e)
+            {
+                throw new FrontMatterFormatException(e.Message);
+            }
         }
 
         public static FrontMatter GetFrontMatter(string contents)
         {
-            string frontMatterYaml = GetFrontMatterFromText(contents);
-            YamlMappingNode mapping = ConvertYaml(frontMatterYaml);
-            FrontMatterContentSanityCheck(mapping);
-            return SetupFrontMatter(mapping);
+            FrontMatter frontMatter = DeserializeContent(contents);
+            FrontMatterContentSanityCheck(frontMatter);
+            return frontMatter;
         }
     }
 

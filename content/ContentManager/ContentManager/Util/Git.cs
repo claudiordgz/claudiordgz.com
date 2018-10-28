@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace ContentManager.Util
 {
@@ -49,7 +50,6 @@ namespace ContentManager.Util
             string fullPath = Path.GetFullPath(new Uri(Path.Combine(rootPath, pathToAsset)).LocalPath);
             if (File.Exists(fullPath))
             {
-                Image image1 = Image.FromFile(fullPath);
                 return GetUrlWithBranch(repoProperties, rootPath, pathToAsset);
             } else
             {
