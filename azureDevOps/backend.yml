@@ -1,5 +1,28 @@
-queue: Hosted Linux Preview
 variables:
   buildConfiguration: 'Release'
 
-steps:
+trigger:
+  branches:
+    include:
+    - '*'
+  paths:
+    include:
+    - backend/*
+    exclude:
+    - content/*
+    - frontend/*
+    - .gitignore
+    - LICENSE
+    - README.md
+
+jobs:
+- job: BackendBuild
+  displayName: Builds and Processes any new backend infrastructure
+  workspace:
+    clean: all
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - script: echo 'Success' && pwd
+    displayName: Build
+    workingDirectory: $(system.defaultWorkingDirectory)/backend

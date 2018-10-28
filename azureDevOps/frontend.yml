@@ -1,5 +1,28 @@
-queue: Hosted Linux Preview
 variables:
   buildConfiguration: 'Release'
 
-steps:
+trigger:
+  branches:
+    include:
+    - '*'
+  paths:
+    include:
+    - frontend/*
+    exclude:
+    - backend/*
+    - frontend/*
+    - .gitignore
+    - LICENSE
+    - README.md
+
+jobs:
+- job: ContentBuild
+  displayName: Builds and Processes any new frontend app changes and infrastructure
+  workspace:
+    clean: all
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - script: echo 'Success' && pwd
+    displayName: Build
+    workingDirectory: $(system.defaultWorkingDirectory)/frontend
