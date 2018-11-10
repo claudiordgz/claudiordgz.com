@@ -1,5 +1,5 @@
 module "dev_api" {
-  source = "../modules/backend"
+  source = "../modules/api-and-tables"
   env    = "dev"
   region = "us-east-1"
 }
