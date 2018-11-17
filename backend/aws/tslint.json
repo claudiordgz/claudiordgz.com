@@ -1,0 +1,12 @@
+{
+  "extends": ["tslint-config-standard"],
+  "linterOptions": {
+    "exclude": [
+      "**/node_modules",
+      "**/bin"
+    ]
+  },
+  "rules": {
+    "await-promise": false
+  }
+}
