@@ -49,6 +49,13 @@ namespace ContentManager.Models
         }
     }
 
+    public class ContentSection
+    {
+        public string Section { get; set; }
+        public string Html { get; set; }
+        public List<string> CustomElements { get; set; }
+    }
+
     public class Thumbnail
     {
         public string Id { get; set; }
@@ -100,7 +107,7 @@ namespace ContentManager.Models
         public string DateUpdated { get; set; }
         public string DatePublished { get; set; }
         public List<string> Author { get; set; }
-        public List<string> Content { get; set; }
+        public List<ContentSection> Content { get; set; }
         public Status Status { get; set; }
     }
 
@@ -117,7 +124,7 @@ namespace ContentManager.Models
         public string DatePublished { get; set; }
         public List<string> Author { get; set; }
         public string FeedId { get; set; }
-        public List<string> Content { get; set; }
+        public List<ContentSection> Content { get; set; }
         public Status Status { get; set; }
     }
 
@@ -134,7 +141,7 @@ namespace ContentManager.Models
         public string DatePublished { get; set; }
         public List<string> Author { get; set; }
         public string ProjectId { get; set; }
-        public List<string> Content { get; set; }
+        public List<ContentSection> Content { get; set; }
         public Status Status { get; set; }
     }
 
@@ -151,7 +158,7 @@ namespace ContentManager.Models
         public string DatePublished { get; set; }
         public List<string> Author { get; set; }
         public string StudyId { get; set; }
-        public List<string> Content { get; set; }
+        public List<ContentSection> Content { get; set; }
         public Status Status { get; set; }
     }
 

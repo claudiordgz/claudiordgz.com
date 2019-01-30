@@ -1,4 +1,17 @@
-thumbnailDirectory: assets
+thumbnailDirectory: './assets'
+contentDirectories:
+  - name: blog
+    path: './blog'
+    type: posts
+  - name: feeds
+    path: './feeds'
+    type: rss
+  - name: projects
+    path: './projects'
+    type: [posts]
+  - name: study
+    path: './study'
+    type: [posts]
 authors:
   - id: claudiordgz
     name: Claudio Rodriguez

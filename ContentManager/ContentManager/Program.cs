@@ -19,6 +19,7 @@ namespace ContentManager
             config.BuildType = bType;
             config.InputType = iType;
             config.Verbose = opts.Verbose;
+            config.UserConfiguration = opts.Config;
             return opts;
         }
 
@@ -28,7 +29,7 @@ namespace ContentManager
         static Configuration ParseArguments (string [] args)
         {
             string gitDirectory = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
-            Configuration config = new Configuration(gitDirectory, Path.Combine(gitDirectory, "content"));
+            Configuration config = new Configuration();
             Parser.Default.ParseArguments<Options>(args)
                 .MapResult(opts => MapOptionsToResults(config, opts),
                 notParsedFunc);
