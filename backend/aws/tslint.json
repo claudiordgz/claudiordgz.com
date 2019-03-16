@@ -1,11 +1,18 @@
 {
-  "extends": ["tslint-config-standard"],
+  "rulesDirectory": "tslint-plugin-prettier",
+  "extends": [
+    "tslint-config-standard",
+    "tslint-config-prettier"
+  ],
   "linterOptions": {
     "exclude": [
       "**/node_modules",
       "**/bin"
     ]
   },
+  "plugins": [
+    "prettier"
+  ],
   "rules": {
     "await-promise": false
   }

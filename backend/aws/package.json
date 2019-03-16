@@ -12,16 +12,21 @@
     "lint": "tslint --config tslint.json --project tsconfig.json"
   },
   "devDependencies": {
-    "@types/node": "latest"
+    "@types/node": "^11.11.3"
   },
   "dependencies": {
-    "@pulumi/aws": "latest",
-    "@pulumi/pulumi": "latest",
-    "@types/jest": "^23.3.9",
-    "jest": "^23.6.0",
-    "ts-jest": "^23.10.4",
-    "tslint": "^5.11.0",
+    "@pulumi/aws": "^0.17.1",
+    "@pulumi/pulumi": "^0.17.2",
+    "@types/jest": "^24.0.11",
+    "jest": "^24.5.0",
+    "ts-jest": "^24.0.0",
+    "tslint": "^5.14.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.1.6"
+    "typescript": "^3.3.3333"
+  },
+  "license": "LGPL-3.0-or-later",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/claudiordgz/claudiordgz.com.git"
   }
 }
