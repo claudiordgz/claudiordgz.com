@@ -8,16 +8,33 @@ using System.IO;
 
 namespace ContentManager
 {
+    [ExcludeFromCodeCoverage]
+    class Options
+    {
+        [Option('t', "build-type",
+            Required = true,
+            HelpText = "Instructs to process diff from latest tag or all content")]
+        public string Type { get; set; }
+
+        [Option('v', "verbose",
+            Default = false,
+            HelpText = "Enables all logs")]
+        public bool Verbose { get; set; }
+
+        [Option("config",
+            Required = true,
+            HelpText = "Configuration YAML file")]
+        public string Config { get; set; }
+
+    }
 
     class Program
     {
         [ExcludeFromCodeCoverage]
         public static Options MapOptionsToResults (Configuration config, Options opts)
         {
-            Enum.TryParse(opts.Input, out Types.InputType iType);
             Enum.TryParse(opts.Type, out Types.BuildType bType);
             config.BuildType = bType;
-            config.InputType = iType;
             config.Verbose = opts.Verbose;
             config.UserConfiguration = opts.Config;
             return opts;
@@ -28,7 +45,6 @@ namespace ContentManager
         [ExcludeFromCodeCoverage]
         static Configuration ParseArguments (string [] args)
         {
-            string gitDirectory = Environment.GetEnvironmentVariable("CODEBUILD_SRC_DIR");
             Configuration config = new Configuration();
             Parser.Default.ParseArguments<Options>(args)
                 .MapResult(opts => MapOptionsToResults(config, opts),

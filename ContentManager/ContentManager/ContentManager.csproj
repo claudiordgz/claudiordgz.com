@@ -17,4 +17,7 @@
     <PackageReference Include="YamlDotNet" Version="5.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Options.cs" />
+  </ItemGroup>
 </Project>
