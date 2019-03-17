@@ -1,0 +1,32 @@
+{
+  "name": "@claudiordgz.com/backend",
+  "version": "0.0.1",
+  "description": "Backend for claudiordgz.com",
+  "main": "bin/index.js",
+  "scripts": {
+    "build": "npm run lint && tsc",
+    "preview": "npm run build && pulumi preview",
+    "up": "npm run build && pulumi up -y",
+    "destroy": "npm run build && pulumi destroy -y",
+    "test": "jest",
+    "lint": "tslint --config tslint.json --project tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^11.11.3"
+  },
+  "dependencies": {
+    "@pulumi/aws": "^0.17.1",
+    "@pulumi/pulumi": "^0.17.2",
+    "@types/jest": "^24.0.11",
+    "jest": "^24.5.0",
+    "ts-jest": "^24.0.0",
+    "tslint": "^5.14.0",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "^3.3.3333"
+  },
+  "license": "LGPL-3.0-or-later",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/claudiordgz/claudiordgz.com.git"
+  }
+}

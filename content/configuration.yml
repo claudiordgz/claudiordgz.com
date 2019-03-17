@@ -1,4 +1,17 @@
-thumbnailDirectory: assets
+thumbnailDirectory: './assets'
+contentDirectories:
+  - name: blog
+    path: './blog'
+    type: posts
+  - name: feeds
+    path: './feeds'
+    type: [rss]
+  - name: projects
+    path: './projects'
+    type: [posts]
+  - name: study
+    path: './study'
+    type: [posts]
 authors:
   - id: claudiordgz
     name: Claudio Rodriguez
@@ -10,6 +23,9 @@ credits:
   - id: gorkhs
     name: Pujol Cristophe
     twitter: '@gorkhs'
+  - id: cocoparisienne
+    name: Anja Osenberg
+    website: https://www.picorest.de/ 
 # default thumbnails to be used
 # when no thumbnail was defined
 thumbnails:
